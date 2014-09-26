@@ -33,13 +33,15 @@ end
 
 class Game
   def initialize
-    #$board = build_board()
+    @board = build_board()
     #set_up_pieces()
     #
     #until $game_over == true
     #  turn()
     #end	
   end
+  
+  attr_reader :board
   
   def turn
     #set_player
@@ -71,6 +73,29 @@ class Game
   end
   
   def load
+  end
+  
+  def build_board
+    board = []
+    
+    for x in 0..7
+      board << []
+    end
+    
+    board.each_with_index do |x, i|
+      for y in 0..7
+        x << Square.new([i, y])
+      end
+    end
+    
+    board
+  end
+  
+  def show_board
+    print " _a_ _b_ _c_ _d_ _e_ _f_ _g_ _h_ "
+    #for file in @board.files_arr
+    #  print file
+    #end
   end
 end
 
@@ -159,6 +184,8 @@ def test_suite
   end
 end
 
+game = Game.new
+print game.board
 puts "Failing tests: #{test_suite.all_tests()}"
 
 puts "chess.rb terminated."
