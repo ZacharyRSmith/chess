@@ -91,6 +91,21 @@ class Game
     board
   end
   
+  def build_show_row(row_num)
+    top_3rd = ""
+    mid_3rd = ""
+    btm_3rd = ""
+    
+    for col_num in 0..7
+      top_3rd << "|   |"
+      mid_3rd << "\n|#{@board[col_num][row_num].show}|"
+      btm_3rd << "\n|___|"
+    end
+    
+    show_row_arr = [top_3rd, mid_3rd, btm_3rd]
+    show_row_arr
+  end
+  
   def show_board
     print " _a_ _b_ _c_ _d_ _e_ _f_ _g_ _h_ "
     #for file in @board.files_arr
