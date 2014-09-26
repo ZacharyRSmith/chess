@@ -11,16 +11,25 @@ puts "chess.rb initiated."
 #print "\n|___|___|___|___|___|___|___|___|"
 
 class Square
-  def initialize(coor, has = nil, show = " ")
+  def initialize(coor, has = nil)
     @coor = coor
     @has = has
-    @show = show
   end
   
-  attr_reader :coor, :has, :show
+  attr_accessor :coor, :has
   
   def has=(piece)
     @has = piece
+  end
+  
+  def show
+    if !self.has()
+      "   "
+    else
+      puts "has: #{self.has}"
+      puts "icon: #{self.has.icon}"      
+      " " + self.has.icon() + self.has.owner()
+    end
   end
 end
 
@@ -33,15 +42,18 @@ class Game
 end
 
 class Piece
-  def initialize(coor)
-    @coor = coor
+  def initialize(owner = " ")
+    @owner = owner
   end
   
-  attr_reader :coor, :icon
+  attr_reader :icon, :owner
 end
 
 class Pawn < Piece
-  @icon = "P"
+  def initialize(owner = " ")
+    super(owner)
+    @icon = "p"
+  end
 end
 
 class Knight < Piece
@@ -63,23 +75,27 @@ end
 
 def test_suite
 
-  def new_square
+  def new_squ
     # new square with only coordinates input
     test_squ = Square.new([0, 0])
     test_squ.coor == [0, 0] && 
       test_squ.has() == nil && 
-      test_squ.show == " "
+      test_squ.show == "   "
   end
 
-  def test_3
-    false
+  def new_squ_with_piece
+    # new square with coordinates and piece input
+    pawn = Pawn.new()
+    test_squ = Square.new([0, 0], pawn)
+    test_squ.has().instance_of?(Pawn) &&
+      test_squ.show() == " p " 
   end
 
   def all_tests
     fails = []
     tests = {
-      new_square: new_square,
-	  test_3: test_3
+      new_squ: new_squ,
+	  new_squ_with_piece: new_squ_with_piece
     }
   
     tests.each do |key, val|
