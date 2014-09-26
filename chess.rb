@@ -32,6 +32,41 @@ class Square
 end
 
 class Game
+  def initialize
+    #$board = build_board()
+    #set_up_pieces()
+    #
+    #until $game_over == true
+    #  turn()
+    #end	
+  end
+  
+  def turn
+    #set_player
+    #show_board()
+    #until move == true
+    #  ask_move
+    #  move()
+    #end
+  end
+  
+  def move(start, target)
+    #check start for piece
+    #check start for piece owner
+    #check if target in piece LOS
+    #check for self-check
+    #...return reask_move(reason)
+    #
+    #change_squ
+    #
+    #check for check
+    #...tell player
+    #if checkmate then game_over
+  end
+  
+  def game_over
+  end
+  
   def save
   end
   
