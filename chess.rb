@@ -25,9 +25,7 @@ class Square
   def show
     if !self.has()
       "   "
-    else
-      puts "has: #{self.has}"
-      puts "icon: #{self.has.icon}"      
+    else   
       " " + self.has.icon() + self.has.owner()
     end
   end
@@ -57,20 +55,38 @@ class Pawn < Piece
 end
 
 class Knight < Piece
-  @icon = "K"
+  def initialize(owner = " ")
+    super(owner)
+    @icon = "N"
+  end
 end
 
 class Bishop < Piece
-  @icon = "B"
+  def initialize(owner = " ")
+    super(owner)
+    @icon = "B"
+  end
 end
 
 class Rook < Piece
+  def initialize(owner = " ")
+    super(owner)
+    @icon = "R"
+  end
 end
 
 class Queen < Piece
+  def initialize(owner = " ")
+    super(owner)
+    @icon = "Q"
+  end
 end
 
 class King < Piece
+  def initialize(owner = " ")
+    super(owner)
+    @icon = "K"
+  end
 end  
 
 def test_suite
