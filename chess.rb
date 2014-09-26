@@ -91,15 +91,15 @@ class Game
     board
   end
   
-  def build_show_row(row_num)
+  def build_show_row_arr(row_num)
     top_3rd = ""
     mid_3rd = ""
     btm_3rd = ""
     
     for col_num in 0..7
-      top_3rd << "|   |"
-      mid_3rd << "\n|#{@board[col_num][row_num].show}|"
-      btm_3rd << "\n|___|"
+      top_3rd << "   |"
+      mid_3rd << "#{@board[col_num][row_num].show}|"
+      btm_3rd << "___|"
     end
     
     show_row_arr = [top_3rd, mid_3rd, btm_3rd]
@@ -107,10 +107,13 @@ class Game
   end
   
   def show_board
-    print " _a_ _b_ _c_ _d_ _e_ _f_ _g_ _h_ "
-    #for file in @board.files_arr
-    #  print file
-    #end
+    print "   _a_ _b_ _c_ _d_ _e_ _f_ _g_ _h_ "
+    for row_num in 0..7
+      show_row_arr = build_show_row_arr(row_num)
+      print "\n  |#{show_row_arr[0]}"
+      print "\n#{row_num + 1} |#{show_row_arr[1]}"
+      print "\n  |#{show_row_arr[2]}" 
+    end
   end
 end
 
@@ -200,7 +203,7 @@ def test_suite
 end
 
 game = Game.new
-print game.board
+game.show_board()
 puts "Failing tests: #{test_suite.all_tests()}"
 
 puts "chess.rb terminated."
