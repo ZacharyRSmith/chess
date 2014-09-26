@@ -1,15 +1,5 @@
 puts "chess.rb initiated."
 
-#print "\n|   |   |   |   |   |   |   |   |"
-#print "\n| R,| N,| B,| Q,| K,| B,| N,| R,|"
-#print "\n|___|___|___|___|___|___|___|___|"
-#print "\n|   |   |   |   |   |   |   |   |"
-#print "\n| p*| p*| p*| p*| p*| p*| p*| p*|"
-#print "\n|___|___|___|___|___|___|___|___|"
-#print "\n|   |   |   |   |   |   |   |   |"
-#print "\n|   |   |   |   |   |   |   |   |"
-#print "\n|___|___|___|___|___|___|___|___|"
-
 class Square
   def initialize(coor, has = nil)
     @coor = coor
@@ -89,6 +79,15 @@ class Game
     end
     
     board
+  end
+  
+  def set_up_board
+  end
+  
+  def set_up_pawns
+  end
+  
+  def set_up_non_pawns
   end
   
   def build_show_row_arr(row_num)
@@ -203,6 +202,8 @@ def test_suite
 end
 
 game = Game.new
+pawn = Pawn.new()
+game.board[0][0].has=(pawn)
 game.show_board()
 puts "Failing tests: #{test_suite.all_tests()}"
 
