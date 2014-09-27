@@ -83,6 +83,7 @@ class Game
   
   def set_up_board
     set_up_pawns()
+    set_up_rooks()
   end
   
   def set_up_pawns
@@ -99,7 +100,8 @@ class Game
     end
   end
   
-  def set_up_non_pawns
+  def set_up_rooks
+    @board[0][0].has=(Rook.new(","))
   end
   
   def build_show_row_arr(row_num)
