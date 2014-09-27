@@ -38,6 +38,7 @@ class Game
     #show_board()
     #until move == true
     #  ask_move
+    #  if "save"...
     #  move()
     #end
   end
@@ -162,13 +163,14 @@ class Piece
     @owner = owner
   end
   
-  attr_accessor :icon, :owner, :square
+  attr_accessor :icon, :owner, :square, :moved
 end
 
 class Pawn < Piece
   def initialize(square, owner)
     super(square, owner)
     @icon = "p"
+    @moved = false
   end
 end
 
@@ -190,6 +192,7 @@ class Rook < Piece
   def initialize(square, owner)
     super(square, owner)
     @icon = "R"
+    @moved = false
   end
 end
 
@@ -204,6 +207,7 @@ class King < Piece
   def initialize(square, owner)
     super(square, owner)
     @icon = "K"
+    @moved = false
   end
 end  
 
@@ -236,5 +240,7 @@ game.set_up_board()
 game.show_board()
 
 puts "\nFailing tests: #{test_suite.all_tests()}"
+
+print game.board[0][0].has.moved()
 
 puts "chess.rb terminated."
