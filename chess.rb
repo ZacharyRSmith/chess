@@ -59,6 +59,10 @@ class Game
     end
     
     #check if target in piece LOS
+    if !piece.los.include? tar_squ
+      return false
+    end
+     
     #check for self-check
     #...return reask_move(reason)
     #
@@ -268,8 +272,8 @@ game.show_board()
 
 puts "\nFailing tests: #{test_suite.all_tests()}"
 
-print game.move([0, 1], [0, 3], ",")
-puts $board[0][1].has.los.coor()
+print game.move([0, 1], [0, 2], ",")
+print $board[0][1].has.los[0].coor()
 #$board[0][2].has.moved()
 
 puts "chess.rb terminated."
