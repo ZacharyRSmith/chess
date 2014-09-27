@@ -23,7 +23,7 @@ end
 
 class Game
   def initialize
-    @board = build_board()
+    $board = build_board()
     #set_up_pieces()
     #
     #until $game_over == true
@@ -43,18 +43,21 @@ class Game
     #end
   end
   
-  def move(start, tar)
-    start_squ = @board.squ[start[0]][start[1]]
-    tar_squ = @board.squ[tar[0]][tar[1]]
+  def move(start, tar, owner)
+    start_squ = $board[start[0]][start[1]]
+    piece = start_squ.has()
+    tar_squ = $board[tar[0]][tar[1]]
     
     #check start for piece
-    if start_squ.has
-      true
-    else
-      false
+    if !piece
+      return false
     end
     
     #check start for piece owner
+    if piece.owner != owner
+      return false
+    end
+    
     #check if target in piece LOS
     #check for self-check
     #...return reask_move(reason)
@@ -64,6 +67,7 @@ class Game
     #check for check
     #...tell player
     #if checkmate then game_over
+    true
   end
   
   def game_over
@@ -109,15 +113,15 @@ class Game
       for col in 0..7
         case col
         when 0, 7 
-          then @board[col][row].has=(Rook.new(@board[col][row], owner))
+          then $board[col][row].has=(Rook.new($board[col][row], owner))
         when 1, 6
-          then @board[col][row].has=(Knight.new(@board[col][row], owner))
+          then $board[col][row].has=(Knight.new($board[col][row], owner))
         when 2, 5
-          then @board[col][row].has=(Bishop.new(@board[col][row], owner))
+          then $board[col][row].has=(Bishop.new($board[col][row], owner))
         when 3
-          then @board[col][row].has=(Queen.new(@board[col][row], owner))
+          then $board[col][row].has=(Queen.new($board[col][row], owner))
         when 4
-          then @board[col][row].has=(King.new(@board[col][row], owner))
+          then $board[col][row].has=(King.new($board[col][row], owner))
         end
       end
     end
@@ -133,7 +137,7 @@ class Game
       end
       
       for col in 0..7
-        squ = @board[col][row]
+        squ = $board[col][row]
         #problem
         squ.has=(Pawn.new(squ, owner))
       end
@@ -147,7 +151,7 @@ class Game
     
     for col_num in 0..7
       top_3rd << "   |"
-      mid_3rd << "#{@board[col_num][row_num].show}|"
+      mid_3rd << "#{$board[col_num][row_num].show}|"
       btm_3rd << "___|"
     end
     
@@ -172,7 +176,7 @@ class Piece
     @owner = owner
   end
   
-  attr_accessor :icon, :owner, :square, :moved
+  attr_accessor :icon, :owner, :square, :moved, :los
 end
 
 class Pawn < Piece
@@ -180,6 +184,20 @@ class Pawn < Piece
     super(square, owner)
     @icon = "p"
     @moved = false
+    @los = self.los()
+  end
+  
+  def los
+    rslt = []
+    
+    case @owner
+    when " "
+      then rslt << $board[@square.coor[0]][@square.coor[1] - 1]
+    when ","
+      then rslt << $board[@square.coor[0]][@square.coor[1] + 1]
+    end
+      
+    rslt
   end
 end
 
@@ -225,7 +243,7 @@ def test_suite
   def test_has_icon_on_square
     game = Game.new()
     game.set_up_board()
-    game.board[0][0].has.icon == "R"
+    $board[0][0].has.icon == "R"
   end
 
   def all_tests
@@ -250,7 +268,8 @@ game.show_board()
 
 puts "\nFailing tests: #{test_suite.all_tests()}"
 
-print game.move([0, 1], [0, 3])
-game.board[0][3].has.moved()
+print game.move([0, 1], [0, 3], ",")
+puts $board[0][1].has.los.coor()
+#$board[0][2].has.moved()
 
 puts "chess.rb terminated."
