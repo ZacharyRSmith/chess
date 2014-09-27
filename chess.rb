@@ -205,9 +205,15 @@ class Pawn < Piece
     
     case @owner
     when " "
-      then rslt << $board[@square.coor[0]][@square.coor[1] - 1]
+      then rslt << $board[@square.coor[0]][@square.coor[1] - 1] &&
+        if self.moved == false
+		  rslt << $board[@square.coor[0]][@square.coor[1] - 2]
+		end
     when ","
-      then rslt << $board[@square.coor[0]][@square.coor[1] + 1]
+      then rslt << $board[@square.coor[0]][@square.coor[1] + 1] &&
+        if self.moved == false
+		  rslt << $board[@square.coor[0]][@square.coor[1] + 2]
+		end
     end
       
     rslt
