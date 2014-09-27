@@ -112,6 +112,9 @@ class Game
     end
   end
   
+  def set_up_knights
+  end
+  
   def build_show_row_arr(row_num)
     top_3rd = ""
     mid_3rd = ""
