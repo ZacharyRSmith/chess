@@ -220,10 +220,49 @@ class Pawn < Piece
   end
 end
 
+def new_coor_helper(x_orig, y_orig, add_x, add_y, result) 
+  (x_new, y_new) = [(x_orig + add_x), (y_orig + add_y)]
+
+  if x_new.between?(0, 7) && y_new.between?(0, 7)
+    result << [x_new, y_new]
+  end
+  
+  result
+end
+
 class Knight < Piece
   def initialize(square, owner)
     super(square, owner)
     @icon = "N"
+    @los = self.los()
+  end
+  
+  def los
+		x_orig = @square.coor[0]
+		y_orig = @square.coor[1]
+		result_coor = []
+
+		arr_2 = [-2, 2]
+		arr_1 = [-1, 1]
+		
+		for add_x in arr_2
+			for add_y in arr_1
+				result_coor = new_coor_helper(x_orig, y_orig, add_x, add_y, result_coor)
+			end
+		end
+		
+		for add_y in arr_2
+			for add_x in arr_1
+				result_coor = new_coor_helper(x_orig, y_orig, add_x, add_y, result_coor)
+			end
+		end  
+		
+		rslt = []
+		for coor in result_coor
+		  rslt << $board[coor[0]][coor[1]]
+		end
+		
+		rslt
   end
 end
 
@@ -288,6 +327,7 @@ game.show_board()
 puts "\nFailing tests: #{test_suite.all_tests()}"
 
 print game.move([0, 1], [0, 3], ",")
+print game.move([1, 0], [2, 2], ",")
 print $board[0][3].has.los[0].coor()
 game.show_board()
 #$board[0][2].has.moved()
