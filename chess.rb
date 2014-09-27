@@ -83,9 +83,36 @@ class Game
   
   def set_up_board
     set_up_pawns()
-    set_up_rooks()
+    set_up_back_rows()
   end
   
+  def set_up_back_rows
+    owners = [" ", ","]
+    
+    for owner in owners
+      if owner == " "
+        row = 7
+      else
+        row = 0
+      end
+      
+      for col in 0..7
+        case col
+        when 0, 7 
+          then @board[col][row].has=(Rook.new(owner))
+        when 1, 6
+          then @board[col][row].has=(Knight.new(owner))
+        when 2, 5
+          then @board[col][row].has=(Bishop.new(owner))
+        when 3
+          then @board[col][row].has=(Queen.new(owner))
+        when 4
+          then @board[col][row].has=(King.new(owner))
+        end
+      end
+    end
+  end
+        
   def set_up_pawns
     #sets White pawns
     for col in 0..7
@@ -98,21 +125,6 @@ class Game
       pawn = Pawn.new(",")
       @board[col][1].has=(pawn)
     end
-  end
-  
-  def set_up_rooks
-    cols = [0, 7]
-    
-    for col in cols
-      @board[col][0].has=(Rook.new(","))
-    end
-    
-    for col in cols
-      @board[col][7].has=(Rook.new(" "))
-    end
-  end
-  
-  def set_up_knights
   end
   
   def build_show_row_arr(row_num)
