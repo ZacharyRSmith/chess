@@ -82,9 +82,21 @@ class Game
   end
   
   def set_up_board
+    set_up_pawns()
   end
   
   def set_up_pawns
+    #sets White pawns
+    for col in 0..7
+      pawn = Pawn.new()
+      @board[col][6].has=(pawn)
+    end
+    
+    #sets Black pawns
+    for col in 0..7
+      pawn = Pawn.new(",")
+      @board[col][1].has=(pawn)
+    end
   end
   
   def set_up_non_pawns
@@ -202,8 +214,7 @@ def test_suite
 end
 
 game = Game.new
-pawn = Pawn.new()
-game.board[0][0].has=(pawn)
+game.set_up_board()
 game.show_board()
 puts "Failing tests: #{test_suite.all_tests()}"
 
