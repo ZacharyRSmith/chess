@@ -31,7 +31,7 @@ class Game
     #end	
   end
   
-  attr_reader :board
+  attr_accessor :board, :move
   
   def turn
     #set_player
@@ -43,8 +43,17 @@ class Game
     #end
   end
   
-  def move(start, target)
+  def move(start, tar)
+    start_squ = @board.squ[start[0]][start[1]]
+    tar_squ = @board.squ[tar[0]][tar[1]]
+    
     #check start for piece
+    if start_squ.has
+      true
+    else
+      false
+    end
+    
     #check start for piece owner
     #check if target in piece LOS
     #check for self-check
@@ -241,6 +250,7 @@ game.show_board()
 
 puts "\nFailing tests: #{test_suite.all_tests()}"
 
-print game.board[0][0].has.moved()
+print game.move([0, 1], [0, 3])
+game.board[0][3].has.moved()
 
 puts "chess.rb terminated."
