@@ -328,6 +328,7 @@ puts "\nFailing tests: #{test_suite.all_tests()}"
 
 print game.move([0, 1], [0, 3], ",")
 print game.move([1, 0], [2, 2], ",")
+print game.move([2, 2], [4, 1], ",")
 print $board[0][3].has.los[0].coor()
 game.show_board()
 #$board[0][2].has.moved()
