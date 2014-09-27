@@ -101,7 +101,15 @@ class Game
   end
   
   def set_up_rooks
-    @board[0][0].has=(Rook.new(","))
+    cols = [0, 7]
+    
+    for col in cols
+      @board[col][0].has=(Rook.new(","))
+    end
+    
+    for col in cols
+      @board[col][7].has=(Rook.new(" "))
+    end
   end
   
   def build_show_row_arr(row_num)
