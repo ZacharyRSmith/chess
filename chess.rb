@@ -99,34 +99,37 @@ class Game
       for col in 0..7
         case col
         when 0, 7 
-          then @board[col][row].has=(Rook.new(owner))
+          then @board[col][row].has=(Rook.new(@board[col][row], owner))
         when 1, 6
-          then @board[col][row].has=(Knight.new(owner))
+          then @board[col][row].has=(Knight.new(@board[col][row], owner))
         when 2, 5
-          then @board[col][row].has=(Bishop.new(owner))
+          then @board[col][row].has=(Bishop.new(@board[col][row], owner))
         when 3
-          then @board[col][row].has=(Queen.new(owner))
+          then @board[col][row].has=(Queen.new(@board[col][row], owner))
         when 4
-          then @board[col][row].has=(King.new(owner))
+          then @board[col][row].has=(King.new(@board[col][row], owner))
         end
       end
     end
   end
-        
+
   def set_up_pawns
-    #sets White pawns
-    for col in 0..7
-      pawn = Pawn.new()
-      @board[col][6].has=(pawn)
-    end
+    owners = [" ", ","]
     
-    #sets Black pawns
-    for col in 0..7
-      pawn = Pawn.new(",")
-      @board[col][1].has=(pawn)
+    for owner in owners
+      case owner
+      when " " then row = 6
+      when "," then row = 1
+      end
+      
+      for col in 0..7
+        squ = @board[col][row]
+        #problem
+        squ.has=(Pawn.new(squ, owner))
+      end
     end
   end
-  
+
   def build_show_row_arr(row_num)
     top_3rd = ""
     mid_3rd = ""
@@ -154,72 +157,57 @@ class Game
 end
 
 class Piece
-  def initialize(owner = " ")
+  def initialize(square, owner)
+    @square = square  
     @owner = owner
   end
   
-  attr_reader :icon, :owner
+  attr_accessor :icon, :owner, :square
 end
 
 class Pawn < Piece
-  def initialize(owner = " ")
-    super(owner)
+  def initialize(square, owner)
+    super(square, owner)
     @icon = "p"
   end
 end
 
 class Knight < Piece
-  def initialize(owner = " ")
-    super(owner)
+  def initialize(square, owner)
+    super(square, owner)
     @icon = "N"
   end
 end
 
 class Bishop < Piece
-  def initialize(owner = " ")
-    super(owner)
+  def initialize(square, owner)
+    super(square, owner)
     @icon = "B"
   end
 end
 
 class Rook < Piece
-  def initialize(owner = " ")
-    super(owner)
+  def initialize(square, owner)
+    super(square, owner)
     @icon = "R"
   end
 end
 
 class Queen < Piece
-  def initialize(owner = " ")
-    super(owner)
+  def initialize(square, owner)
+    super(square, owner)
     @icon = "Q"
   end
 end
 
 class King < Piece
-  def initialize(owner = " ")
-    super(owner)
+  def initialize(square, owner)
+    super(square, owner)
     @icon = "K"
   end
 end  
 
 def test_suite
-
-  def new_squ
-    # new square with only coordinates input
-    test_squ = Square.new([0, 0])
-    test_squ.coor == [0, 0] && 
-      test_squ.has() == nil && 
-      test_squ.show == "   "
-  end
-
-  def new_squ_with_piece
-    # new square with coordinates and piece input
-    pawn = Pawn.new()
-    test_squ = Square.new([0, 0], pawn)
-    test_squ.has().instance_of?(Pawn) &&
-      test_squ.show() == " p " 
-  end
   
   def test_has_icon_on_square
     game = Game.new()
@@ -230,8 +218,6 @@ def test_suite
   def all_tests
     fails = []
     tests = {
-      new_squ: new_squ(),
-	  new_squ_with_piece: new_squ_with_piece(),
       test_has_icon_on_square: test_has_icon_on_square()
     }
   
@@ -245,9 +231,10 @@ def test_suite
   end
 end
 
-game = Game.new
+game = Game.new()
 game.set_up_board()
 game.show_board()
+
 puts "\nFailing tests: #{test_suite.all_tests()}"
 
 puts "chess.rb terminated."
