@@ -220,12 +220,19 @@ def test_suite
     test_squ.has().instance_of?(Pawn) &&
       test_squ.show() == " p " 
   end
+  
+  def test_has_icon_on_square
+    game = Game.new()
+    game.set_up_board()
+    game.board[0][0].has.icon == "R"
+  end
 
   def all_tests
     fails = []
     tests = {
-      new_squ: new_squ,
-	  new_squ_with_piece: new_squ_with_piece
+      new_squ: new_squ(),
+	  new_squ_with_piece: new_squ_with_piece(),
+      test_has_icon_on_square: test_has_icon_on_square()
     }
   
     tests.each do |key, val|
@@ -241,6 +248,6 @@ end
 game = Game.new
 game.set_up_board()
 game.show_board()
-puts "Failing tests: #{test_suite.all_tests()}"
+puts "\nFailing tests: #{test_suite.all_tests()}"
 
 puts "chess.rb terminated."
