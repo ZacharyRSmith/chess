@@ -67,10 +67,19 @@ class Game
     #...return reask_move(reason)
     #
     #change_squ
+    change_squ(start_squ, piece, tar_squ)
+    
     #
     #check for check
     #...tell player
     #if checkmate then game_over
+    true
+  end
+  
+  def change_squ(start_squ, piece, tar_squ)
+    piece.square = tar_squ
+    start_squ.has = nil
+    tar_squ.has = piece
     true
   end
   
@@ -273,7 +282,8 @@ game.show_board()
 puts "\nFailing tests: #{test_suite.all_tests()}"
 
 print game.move([0, 1], [0, 2], ",")
-print $board[0][1].has.los[0].coor()
+print $board[0][2].has.los[0].coor()
+game.show_board()
 #$board[0][2].has.moved()
 
 puts "chess.rb terminated."
