@@ -278,6 +278,46 @@ class Rook < Piece
     super(square, owner)
     @icon = "R"
     @moved = false
+    @los = self.los()
+  end
+  
+  def los
+	x_orig = @square.coor[0]
+	y_orig = @square.coor[1]
+	result_coor = []
+
+	arr_1 = [-1, 1]
+	
+	for add_x in arr_1
+	  x_now = x_orig
+	  
+	  until !x_now.between?(0, 7)
+		x_now = x_now + add_x
+		  
+		unless !x_now.between?(0, 7)
+		  result_coor << [x_now, y_orig]
+		end
+	  end
+	end
+	
+	for add_y in arr_1
+	  y_now = y_orig
+	  
+	  until !y_now.between?(0, 7)
+		y_now = y_now + add_y
+		
+		unless !y_now.between?(0, 7)
+		  result_coor << [x_orig, y_now]
+		end
+	  end
+	end  
+	
+	rslt = []
+	for coor in result_coor
+	  rslt << $board[coor[0]][coor[1]]
+	end
+	
+	rslt
   end
 end
 
@@ -329,8 +369,9 @@ puts "\nFailing tests: #{test_suite.all_tests()}"
 print game.move([0, 1], [0, 3], ",")
 print game.move([1, 0], [2, 2], ",")
 print game.move([2, 2], [4, 1], ",")
+print game.move([0, 0], [0, 2], ",")
 print $board[0][3].has.los[0].coor()
-game.show_board()
+puts game.show_board()
 #$board[0][2].has.moved()
 
 puts "chess.rb terminated."
