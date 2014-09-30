@@ -296,10 +296,10 @@ class Rook < Piece
 		  
 		if x_now.between?(0, 7)
 		  result_coor << [x_now, y_orig]
-		end
-		
-		if $board[x_now][y_orig].has
-		  break
+		  
+		  if $board[x_now][y_orig].has
+		    break
+		  end
 		end
 	  end
 	end
@@ -312,10 +312,10 @@ class Rook < Piece
 		
 		if y_now.between?(0, 7)
 		  result_coor << [x_orig, y_now]
-		end
-		
-		if $board[x_orig][y_now].has
-		  break
+		  
+		  if $board[x_orig][y_now].has
+		    break
+		  end
 		end
 	  end
 	end  
@@ -380,7 +380,7 @@ print game.move([2, 2], [4, 1], ",")
 print game.move([0, 0], [0, 2], ",")
 print $board[0][3].has.los[0].coor()
 puts game.show_board()
-puts $board[0][2].has.los(0
+puts $board[0][2].has.los.each { |squ| print "\n#{squ.coor}" }
 #$board[0][2].has.moved()
 
 puts "chess.rb terminated."
