@@ -24,22 +24,44 @@ end
 class Game
   def initialize
     $board = build_board()
+    self.set_up_board()
     #set_up_pieces()
+    $game_over = false
+    $player = ","
     #
-    #until $game_over == true
-    #  turn()
-    #end	
+    until $game_over == true
+      turn()
+    end	
   end
   
   attr_accessor :board, :move
   
   def turn
     #set_player
-    #show_board()
+    case $player
+    when "," then $player = " "
+    when " " then $player = ","
+    end
+    
+    self.show_board()
+    
     #until move == true
+    
     #  ask_move
+      puts "Player #{$player}, please select start coor X..."
+      start_x = gets.chomp.to_i
+      puts "Player #{$player}, please select start coor Y..."
+      start_y = gets.chomp.to_i
+      puts "Player #{$player}, please select target coor X..."
+      tar_x = gets.chomp.to_i
+      puts "Player #{$player}, please select target coor Y..."
+      tar_y = gets.chomp.to_i
+      
     #  if "save"...
+    
     #  move()
+    move([start_x, start_y], [tar_x, tar_y], $player)
+    
     #end
   end
   
@@ -369,6 +391,7 @@ def test_suite
   end
 end
 
+def tests_a
 game = Game.new()
 game.set_up_board()
 game.show_board()
@@ -383,5 +406,12 @@ print $board[0][3].has.los[0].coor()
 puts game.show_board()
 puts $board[0][2].has.los.each { |squ| print "\n#{squ.coor}" }
 puts $board[0][3].has.moved()
+end
+
+def tests_b
+  game = Game.new()
+end
+
+tests_b()
 
 puts "chess.rb terminated."
