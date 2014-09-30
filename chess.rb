@@ -240,18 +240,41 @@ class Pawn < Piece
     
     case @owner
     when " "
-      then rslt << $board[@square.coor[0]][@square.coor[1] - 1] &&
-        if self.moved == false
-		  rslt << $board[@square.coor[0]][@square.coor[1] - 2]
-		end
+      then direction = -1
     when ","
-      then rslt << $board[@square.coor[0]][@square.coor[1] + 1] &&
-        if self.moved == false
-		  rslt << $board[@square.coor[0]][@square.coor[1] + 2]
-		end
+      then direction = 1
     end
-      
+    
+    squ_in_front = squ_at_relative_coor(0, direction * 1)
+    rslt << squ_in_front unless squ_in_front.has()
+    
+    if self.moved == false
+      squ_two_in_front = squ_at_relative_coor(0, direction * 2)
+	    rslt << squ_two_in_front unless squ_two_in_front.has() || squ_in_front.has()
+ 	  end
+ 	  
+ 	  arr = [-1, 1]
+ 	  for add_x in arr
+ 	    squ_at_front_diag = squ_at_relative_coor(add_x, direction * 1)
+ 	    
+ 	    if squ_at_front_diag
+ 	      if squ_at_front_diag.has()
+ 	        rslt << squ_at_front_diag
+ 	      end
+ 	    end
+    end
+    
     rslt
+  end
+end
+
+def squ_at_relative_coor(add_x, add_y)
+  print "\n#{self.square.coor}"
+  new_x = self.square.coor[0] + add_x
+  new_y = self.square.coor[1] + add_y
+  
+  if new_x.between?(0, 7) && new_y.between?(0, 7)
+    return $board[new_x][new_y] 
   end
 end
 
