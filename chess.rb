@@ -86,7 +86,12 @@ class Game
     
     #check if target in piece LOS
     if !piece.los.include? tar_squ
-      return "Error: Target is not a valid move! " << msg_help
+      return "Error: That piece cannot move in that manner! " << msg_help
+    end
+    
+    #check target for owner
+    if tar_squ.has.owner == owner
+      return "Error: You cannot attack yourself! " << msg_help
     end
      
     #check for self-check
