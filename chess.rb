@@ -381,6 +381,6 @@ print game.move([0, 0], [0, 2], ",")
 print $board[0][3].has.los[0].coor()
 puts game.show_board()
 puts $board[0][2].has.los.each { |squ| print "\n#{squ.coor}" }
-#$board[0][2].has.moved()
+puts $board[0][2].has.moved()
 
 puts "chess.rb terminated."
