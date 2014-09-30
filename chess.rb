@@ -265,105 +265,82 @@ def new_coor_helper(x_orig, y_orig, add_x, add_y, result)
   result
 end
 
-class Knight < Piece
-  def initialize(square, owner, moved = false)
-    super(square, owner, moved)
-    @icon = "N"
-    @los = self.los()
-  end
-  
-  def los
-		x_orig = @square.coor[0]
-		y_orig = @square.coor[1]
-		result_coor = []
+def build_knight_los
+	x_orig = self.square.coor[0]
+	y_orig = self.square.coor[1]
+	result_coor = []
 
-		arr_2 = [-2, 2]
-		arr_1 = [-1, 1]
-		
-		for add_x in arr_2
-			for add_y in arr_1
-				result_coor = new_coor_helper(x_orig, y_orig, add_x, add_y, result_coor)
-			end
-		end
-		
-		for add_y in arr_2
-			for add_x in arr_1
-				result_coor = new_coor_helper(x_orig, y_orig, add_x, add_y, result_coor)
-			end
-		end  
-		
-		rslt = []
-		for coor in result_coor
-		  rslt << $board[coor[0]][coor[1]]
-		end
-		
-		rslt
-  end
-end
-
-class Bishop < Piece
-  def initialize(square, owner, moved = false)
-    super(square, owner, moved)
-    @icon = "B"
-  end
-  
-  def los
-		x_orig = @square.coor[0]
-		y_orig = @square.coor[1]
-		result_coor = []
-
-		arr_1 = [-1, 1]
-		
-		for add_x in arr_1
-		  for add_y in arr_1
-		    x_now = x_orig
-		    y_now = y_orig
-		    
-		    until !x_now.between?(0, 7) || !y_now.between?(0, 7)
-		      x_now = x_now + add_x
-		      y_now = y_now + add_y
-		      
-		      if x_now.between?(0, 7) && y_now.between?(0, 7)
-		        result_coor << [x_now, y_now]
-		        
-		        if $board[x_now][y_now].has
-		          break
-		        end
-		      end
-		    end
-		  end
-		end
-		
-		rslt = []
-	  for coor in result_coor
-	    rslt << $board[coor[0]][coor[1]]
-	  end
+	arr_2 = [-2, 2]
+	arr_1 = [-1, 1]
 	
-	  rslt
-  end
+	for add_x in arr_2
+		for add_y in arr_1
+			result_coor = new_coor_helper(x_orig, y_orig, add_x, add_y, result_coor)
+		end
+	end
+	
+	for add_y in arr_2
+		for add_x in arr_1
+			result_coor = new_coor_helper(x_orig, y_orig, add_x, add_y, result_coor)
+		end
+	end  
+	
+	rslt = []
+	for coor in result_coor
+		rslt << $board[coor[0]][coor[1]]
+	end
+	
+	rslt
 end
 
-class Rook < Piece
-  def initialize(square, owner, moved = false)
-    super(square, owner, moved)
-    @icon = "R"
-    @moved = false
-    @los = self.los()
-  end
-  
-  def los
-		x_orig = @square.coor[0]
-		y_orig = @square.coor[1]
-		result_coor = []
+def build_bishop_los
+	x_orig = self.square.coor[0]
+	y_orig = self.square.coor[1]
+	result_coor = []
 
-		arr_1 = [-1, 1]
-		
-		for add_x in arr_1
+	arr_1 = [-1, 1]
+	
+	for add_x in arr_1
+		for add_y in arr_1
 			x_now = x_orig
+			y_now = y_orig
 			
-			until !x_now.between?(0, 7)
-			x_now = x_now + add_x
+			until !x_now.between?(0, 7) || !y_now.between?(0, 7)
+				x_now = x_now + add_x
+				y_now = y_now + add_y
 				
+				if x_now.between?(0, 7) && y_now.between?(0, 7)
+					result_coor << [x_now, y_now]
+					
+					if $board[x_now][y_now].has
+						break
+					end
+				end
+			end
+		end
+	end
+	
+	rslt = []
+	for coor in result_coor
+		rslt << $board[coor[0]][coor[1]]
+	end
+
+	rslt
+end
+
+def build_rook_los
+	x_orig = @square.coor[0]
+	y_orig = @square.coor[1]
+	result_coor = []
+
+	arr_1 = [-1, 1]
+	
+	for add_x in arr_1
+		x_now = x_orig
+		
+		until !x_now.between?(0, 7)
+		x_now = x_now + add_x
+			
 			if x_now.between?(0, 7)
 				result_coor << [x_now, y_orig]
 				
@@ -371,14 +348,14 @@ class Rook < Piece
 					break
 				end
 			end
-			end
 		end
+	end
 		
-		for add_y in arr_1
-			y_now = y_orig
-			
-			until !y_now.between?(0, 7)
-			y_now = y_now + add_y
+	for add_y in arr_1
+		y_now = y_orig
+		
+		until !y_now.between?(0, 7)
+		y_now = y_now + add_y
 			
 			if y_now.between?(0, 7)
 				result_coor << [x_orig, y_now]
@@ -396,6 +373,44 @@ class Rook < Piece
 	end
 	
 	rslt
+end
+
+class Knight < Piece
+  def initialize(square, owner, moved = false)
+    super(square, owner, moved)
+    @icon = "N"
+    @los = self.los()
+  end
+  
+  def los
+	  los = build_knight_los()
+	  los
+  end
+end
+
+class Bishop < Piece
+  def initialize(square, owner, moved = false)
+    super(square, owner, moved)
+    @icon = "B"
+  end
+  
+  def los
+    los = build_bishop_los()
+    los
+  end
+end
+
+class Rook < Piece
+  def initialize(square, owner, moved = false)
+    super(square, owner, moved)
+    @icon = "R"
+    @moved = false
+    @los = self.los()
+  end
+  
+  def los
+		los = build_rook_los()
+		los
   end
 end
 
