@@ -1,3 +1,5 @@
+#remaining: en passe for Pawn, promote for Pawn, castling, re-calc LOS, 
+#look for check/checkmate, delete piece from board
 puts "chess.rb initiated."
 
 class Square
