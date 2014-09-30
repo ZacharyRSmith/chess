@@ -29,12 +29,13 @@ class Game
     $game_over = false
     $player = ","
     #
+    @moved = false
     until $game_over == true
       turn()
     end	
   end
   
-  attr_accessor :board, :move
+  attr_accessor :board, :moved
   
   def turn
     #set_player
@@ -45,7 +46,8 @@ class Game
     
     self.show_board()
     
-    #until move == true
+    self.moved = false
+    until self.moved == true
     
     #  ask_move
       puts "Player #{$player}, please select start coor X..."
@@ -60,9 +62,9 @@ class Game
     #  if "save"...
     
     #  move()
-    move([start_x, start_y], [tar_x, tar_y], $player)
+      move([start_x, start_y], [tar_x, tar_y], $player)
     
-    #end
+    end
   end
   
   def move(start, tar, owner)
@@ -91,6 +93,7 @@ class Game
     #change_squ
     change_squ(start_squ, piece, tar_squ)
     
+    self.moved = true
     #
     #check for check
     #...tell player
