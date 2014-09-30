@@ -25,10 +25,10 @@ class Game
   def initialize
     $board = build_board()
     self.set_up_board()
-    #set_up_pieces()
+
     $game_over = false
     $player = ","
-    #
+    
     @moved = false
     until $game_over == true
       turn()
@@ -417,6 +417,6 @@ def tests_b
   game = Game.new()
 end
 
-tests_b()
+tests_a()
 
 puts "chess.rb terminated."
