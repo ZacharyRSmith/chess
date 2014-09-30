@@ -62,8 +62,8 @@ class Game
     #  if "save"...
     
     #  move()
-      move([start_x, start_y], [tar_x, tar_y], $player)
-    
+      move_message = move([start_x, start_y], [tar_x, tar_y], $player)
+      puts move_message
     end
   end
   
@@ -72,19 +72,21 @@ class Game
     piece = start_squ.has()
     tar_squ = $board[tar[0]][tar[1]]
     
+    msg_help = "Please select a different move..."
+    
     #check start for piece
     if !piece
-      return false
+      return "Error: The starting square you selected has no piece! " << msg_help
     end
     
     #check start for piece owner
     if piece.owner != owner
-      return false
+      return "Error: The piece you selected does not belong to you! " << msg_help
     end
     
     #check if target in piece LOS
     if !piece.los.include? tar_squ
-      return false
+      return "Error: Target is not a valid move! " << msg_help
     end
      
     #check for self-check
@@ -98,7 +100,7 @@ class Game
     #check for check
     #...tell player
     #if checkmate then game_over
-    true
+    "Piece was moved."
   end
   
   def change_squ(start_squ, piece, tar_squ)
