@@ -80,6 +80,7 @@ class Game
     piece.square = tar_squ
     start_squ.has = nil
     tar_squ.has = piece
+    piece.moved = true
     true
   end
   
@@ -184,19 +185,19 @@ class Game
 end
 
 class Piece
-  def initialize(square, owner)
+  def initialize(square, owner, moved = false)
     @square = square  
     @owner = owner
+    @moved = moved
   end
   
   attr_accessor :icon, :owner, :square, :moved, :los
 end
 
 class Pawn < Piece
-  def initialize(square, owner)
-    super(square, owner)
+  def initialize(square, owner, moved = false)
+    super(square, owner, moved)
     @icon = "p"
-    @moved = false
     @los = self.los()
   end
   
@@ -231,8 +232,8 @@ def new_coor_helper(x_orig, y_orig, add_x, add_y, result)
 end
 
 class Knight < Piece
-  def initialize(square, owner)
-    super(square, owner)
+  def initialize(square, owner, moved = false)
+    super(square, owner, moved)
     @icon = "N"
     @los = self.los()
   end
@@ -267,15 +268,15 @@ class Knight < Piece
 end
 
 class Bishop < Piece
-  def initialize(square, owner)
-    super(square, owner)
+  def initialize(square, owner, moved = false)
+    super(square, owner, moved)
     @icon = "B"
   end
 end
 
 class Rook < Piece
-  def initialize(square, owner)
-    super(square, owner)
+  def initialize(square, owner, moved = false)
+    super(square, owner, moved)
     @icon = "R"
     @moved = false
     @los = self.los()
@@ -330,15 +331,15 @@ class Rook < Piece
 end
 
 class Queen < Piece
-  def initialize(square, owner)
-    super(square, owner)
+  def initialize(square, owner, moved = false)
+    super(square, owner, moved)
     @icon = "Q"
   end
 end
 
 class King < Piece
-  def initialize(square, owner)
-    super(square, owner)
+  def initialize(square, owner, moved = false)
+    super(square, owner, moved)
     @icon = "K"
     @moved = false
   end
@@ -381,6 +382,6 @@ print game.move([0, 0], [0, 2], ",")
 print $board[0][3].has.los[0].coor()
 puts game.show_board()
 puts $board[0][2].has.los.each { |squ| print "\n#{squ.coor}" }
-puts $board[0][2].has.moved()
+puts $board[0][3].has.moved()
 
 puts "chess.rb terminated."
