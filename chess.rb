@@ -86,12 +86,14 @@ class Game
     
     #check if target in piece LOS
     if !piece.los.include? tar_squ
-      return "Error: That piece cannot move in that manner! " << msg_help
+      return "Error: That piece cannot maneuver in that way! " << msg_help
     end
     
     #check target for owner
-    if tar_squ.has.owner == owner
-      return "Error: You cannot attack yourself! " << msg_help
+    if tar_squ.has
+      if tar_squ.has.owner == owner
+        return "Error: You cannot attack yourself! " << msg_help
+      end
     end
      
     #check for self-check
@@ -304,6 +306,41 @@ class Bishop < Piece
     super(square, owner, moved)
     @icon = "B"
   end
+  
+  def los
+		x_orig = @square.coor[0]
+		y_orig = @square.coor[1]
+		result_coor = []
+
+		arr_1 = [-1, 1]
+		
+		for add_x in arr_1
+		  for add_y in arr_1
+		    x_now = x_orig
+		    y_now = y_orig
+		    
+		    until !x_now.between?(0, 7) || !y_now.between?(0, 7)
+		      x_now = x_now + add_x
+		      y_now = y_now + add_y
+		      
+		      if x_now.between?(0, 7) && y_now.between?(0, 7)
+		        result_coor << [x_now, y_now]
+		        
+		        if $board[x_now][y_now].has
+		          break
+		        end
+		      end
+		    end
+		  end
+		end
+		
+		rslt = []
+	  for coor in result_coor
+	    rslt << $board[coor[0]][coor[1]]
+	  end
+	
+	  rslt
+  end
 end
 
 class Rook < Piece
@@ -315,42 +352,42 @@ class Rook < Piece
   end
   
   def los
-	x_orig = @square.coor[0]
-	y_orig = @square.coor[1]
-	result_coor = []
+		x_orig = @square.coor[0]
+		y_orig = @square.coor[1]
+		result_coor = []
 
-	arr_1 = [-1, 1]
-	
-	for add_x in arr_1
-	  x_now = x_orig
-	  
-	  until !x_now.between?(0, 7)
-		x_now = x_now + add_x
-		  
-		if x_now.between?(0, 7)
-		  result_coor << [x_now, y_orig]
-		  
-		  if $board[x_now][y_orig].has
-		    break
-		  end
-		end
-	  end
-	end
-	
-	for add_y in arr_1
-	  y_now = y_orig
-	  
-	  until !y_now.between?(0, 7)
-		y_now = y_now + add_y
+		arr_1 = [-1, 1]
 		
-		if y_now.between?(0, 7)
-		  result_coor << [x_orig, y_now]
-		  
-		  if $board[x_orig][y_now].has
-		    break
-		  end
+		for add_x in arr_1
+			x_now = x_orig
+			
+			until !x_now.between?(0, 7)
+			x_now = x_now + add_x
+				
+			if x_now.between?(0, 7)
+				result_coor << [x_now, y_orig]
+				
+				if $board[x_now][y_orig].has
+					break
+				end
+			end
+			end
 		end
-	  end
+		
+		for add_y in arr_1
+			y_now = y_orig
+			
+			until !y_now.between?(0, 7)
+			y_now = y_now + add_y
+			
+			if y_now.between?(0, 7)
+				result_coor << [x_orig, y_now]
+				
+				if $board[x_orig][y_now].has
+					break
+				end
+			end
+		end
 	end  
 	
 	rslt = []
