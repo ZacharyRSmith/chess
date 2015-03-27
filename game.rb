@@ -21,74 +21,83 @@ class Game
     end
   end
 
+  def get_ind_from_ltr(ltr)
+    case ltr
+    when "a" then return 0
+    when "b" then return 1
+    when "c" then return 2
+    when "d" then return 3
+    when "e" then return 4
+    when "f" then return 5
+    when "g" then return 6
+    when "h" then return 7
+    end
+  end
+
+  def prompt_start_squ
+    puts "Player #{$player}, please enter in the square of the piece you want to move (eg, 'e4')..."
+    input = gets.chomp
+    start_x = self.get_ind_from_ltr(input[0].downcase)
+    start_y = input[1].to_i - 1
+    if !start_x.between?(0, 7) || !start_y.between?(0, 7)
+      puts "There is no square #{input}."
+      return self.prompt_start_squ()
+    end
+    start_squ = $board[start_x][start_y]
+    if !start_squ.has()
+      puts "There is no piece at square #{input}!"
+      return self.prompt_start_squ()
+    end
+    if start_squ.has().owner != $player
+      puts "You cannot move your opponent's piece!"
+      return self.prompt_start_squ()
+    end
+
+    puts "You selected square: #{input}."
+    start_squ
+  end
+
+  def prompt_target_squ(moving_piece)
+    puts "Now please enter in the square to where you want to move..."
+    input = gets.chomp
+    target_x = self.get_ind_from_ltr(input[0].downcase)
+    target_y = input[1].to_i - 1
+    if !target_x.between?(0, 7) || !target_y.between?(0, 7)
+      puts "There is no square #{input}."
+      return self.prompt_target_squ(moving_piece)
+    end
+    target_squ = $board[target_x][target_y]
+    if target_squ.has()
+      if target_squ.has().owner == $player
+        puts "You cannot attack your own piece!"
+        return self.prompt_target_squ(moving_piece)
+      end
+    end
+    if !moving_piece.los.include?(target_squ)
+      puts "Error: Your piece cannot maneuver in that way!"
+      return self.prompt_target_squ(moving_piece)
+    end
+    #FIXME Guard against self-check
+
+    puts "You selected target square: #{input}."
+    target_squ
+  end
+
   def turn
     self.change_player()
     self.show_board()
-    self.moved = false
-    until self.moved == true
-      puts "Player #{$player}, please select start coor X..."
-      start_x = gets.chomp.to_i
-      puts "Player #{$player}, please select start coor Y..."
-      start_y = gets.chomp.to_i
-      puts "Player #{$player}, please select target coor X..."
-      tar_x = gets.chomp.to_i
-      puts "Player #{$player}, please select target coor Y..."
-      tar_y = gets.chomp.to_i
-    #  move()
-      move_message = move([start_x, start_y], [tar_x, tar_y], $player)
-      puts move_message
-    end
+
+    start_squ  = self.prompt_start_squ()
+    target_squ = self.prompt_target_squ(start_squ.has())
+    self.move_piece(start_squ, start_squ.has(), target_squ)
+    # FIXME Check for check/checkmate
   end
 
-  def move(start, tar, owner)
-    start_squ = $board[start[0]][start[1]]
-    piece = start_squ.has()
-    tar_squ = $board[tar[0]][tar[1]]
-
-    msg_help = "Please select a different move..."
-
-    #check start for piece
-    if !piece
-      return "Error: The starting square you selected has no piece! " << msg_help
-    end
-
-    #check start for piece owner
-    if piece.owner != owner
-      return "Error: The piece you selected does not belong to you! " << msg_help
-    end
-
-    #check if target in piece LOS
-    if !piece.los.include? tar_squ
-      return "Error: That piece cannot maneuver in that way! " << msg_help
-    end
-
-    #check target for owner
-    if tar_squ.has
-      if tar_squ.has.owner == owner
-        return "Error: You cannot attack yourself! " << msg_help
-      end
-    end
-
-    #check for self-check
-    #...return reask_move(reason)
-    #
-    #change_squ
-    change_squ(start_squ, piece, tar_squ)
-
-    self.moved = true
-    #
-    #check for check
-    #...tell player
-    #if checkmate then game_over
-    "Piece was moved."
-  end
-
-  def change_squ(start_squ, piece, tar_squ)
-    piece.square = tar_squ
+  def move_piece(start_squ, piece, tar_squ)
+    piece.square  = tar_squ
     start_squ.has = nil
-    tar_squ.has = piece
-    piece.moved = true
-    true
+    tar_squ.has   = piece
+    piece.moved   = true
   end
 
   def game_over
