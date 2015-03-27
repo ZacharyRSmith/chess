@@ -1,4 +1,5 @@
 require_relative 'coor_helper'
+require_relative 'los_helper'
 require_relative 'piece'
 
 class Queen < Piece
@@ -10,7 +11,6 @@ class Queen < Piece
 
   def los
     los = build_bishop_los()
-    los = los + build_rook_los()
-    los
+    los + build_rook_los()
   end
 end

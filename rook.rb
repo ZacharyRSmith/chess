@@ -1,4 +1,5 @@
 require_relative 'coor_helper'
+require_relative 'los_helper'
 require_relative 'piece'
 
 class Rook < Piece
@@ -10,7 +11,6 @@ class Rook < Piece
   end
 
   def los
-		los = build_rook_los()
-		los
+		build_rook_los()
   end
 end
