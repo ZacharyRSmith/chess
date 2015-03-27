@@ -12,164 +12,116 @@ require_relative 'queen'
 require_relative 'rook'
 require_relative 'square'
 
-def squ_at_relative_coor(add_x, add_y)
-  print "\n#{self.square.coor}"
-  new_x = self.square.coor[0] + add_x
-  new_y = self.square.coor[1] + add_y
-  
-  if new_x.between?(0, 7) && new_y.between?(0, 7)
-    return $board[new_x][new_y] 
-  end
-end
-
-def new_coor_helper(x_orig, y_orig, add_x, add_y, result) 
-  (x_new, y_new) = [(x_orig + add_x), (y_orig + add_y)]
-
-  if x_new.between?(0, 7) && y_new.between?(0, 7)
-    result << [x_new, y_new]
-  end
-  
-  result
-end
-
-def build_knight_los
-	x_orig = self.square.coor[0]
-	y_orig = self.square.coor[1]
-	result_coor = []
-
-	arr_2 = [-2, 2]
-	arr_1 = [-1, 1]
-	
-	for add_x in arr_2
-		for add_y in arr_1
-			result_coor = new_coor_helper(x_orig, y_orig, add_x, add_y, result_coor)
-		end
-	end
-	
-	for add_y in arr_2
-		for add_x in arr_1
-			result_coor = new_coor_helper(x_orig, y_orig, add_x, add_y, result_coor)
-		end
-	end  
-	
-	rslt = []
-	for coor in result_coor
-		rslt << $board[coor[0]][coor[1]]
-	end
-	
-	rslt
-end
-
 def build_bishop_los
-	x_orig = self.square.coor[0]
-	y_orig = self.square.coor[1]
-	result_coor = []
+  x_orig = self.square.coor[0]
+  y_orig = self.square.coor[1]
+  result_coor = []
 
-	arr_1 = [-1, 1]
-	
-	for add_x in arr_1
-		for add_y in arr_1
-			x_now = x_orig
-			y_now = y_orig
-			
-			until !x_now.between?(0, 7) || !y_now.between?(0, 7)
-				x_now = x_now + add_x
-				y_now = y_now + add_y
-				
-				if x_now.between?(0, 7) && y_now.between?(0, 7)
-					result_coor << [x_now, y_now]
-					
-					if $board[x_now][y_now].has
-						break
-					end
-				end
-			end
-		end
-	end
-	
-	rslt = []
-	for coor in result_coor
-		rslt << $board[coor[0]][coor[1]]
-	end
+  arr_1 = [-1, 1]
 
-	rslt
+  for add_x in arr_1
+    for add_y in arr_1
+      x_now = x_orig
+      y_now = y_orig
+
+    until !x_now.between?(0, 7) || !y_now.between?(0, 7)
+    x_now = x_now + add_x
+    y_now = y_now + add_y
+
+    if x_now.between?(0, 7) && y_now.between?(0, 7)
+      result_coor << [x_now, y_now]
+
+      if $board[x_now][y_now].has
+        break
+      end
+    end
+  end
+end
+end
+
+rslt = []
+for coor in result_coor
+  rslt << $board[coor[0]][coor[1]]
+end
+
+rslt
 end
 
 def build_rook_los
-	x_orig = self.square.coor[0]
-	y_orig = self.square.coor[1]
-	result_coor = []
+  x_orig = self.square.coor[0]
+  y_orig = self.square.coor[1]
+  result_coor = []
 
-	arr_1 = [-1, 1]
-	
-	for add_x in arr_1
-		x_now = x_orig
-		
-		until !x_now.between?(0, 7)
-		x_now = x_now + add_x
-			
-			if x_now.between?(0, 7)
-				result_coor << [x_now, y_orig]
-				
-				if $board[x_now][y_orig].has
-					break
-				end
-			end
-		end
-	end
-		
-	for add_y in arr_1
-		y_now = y_orig
-		
-		until !y_now.between?(0, 7)
-		y_now = y_now + add_y
-			
-			if y_now.between?(0, 7)
-				result_coor << [x_orig, y_now]
-				
-				if $board[x_orig][y_now].has
-					break
-				end
-			end
-		end
-	end  
-	
-	rslt = []
-	for coor in result_coor
-	  rslt << $board[coor[0]][coor[1]]
-	end
-	
-	rslt
+  arr_1 = [-1, 1]
+
+  for add_x in arr_1
+    x_now = x_orig
+
+  until !x_now.between?(0, 7)
+  x_now = x_now + add_x
+
+  if x_now.between?(0, 7)
+    result_coor << [x_now, y_orig]
+
+    if $board[x_now][y_orig].has
+      break
+    end
+  end
+end
+end
+
+for add_y in arr_1
+  y_now = y_orig
+
+until !y_now.between?(0, 7)
+y_now = y_now + add_y
+
+if y_now.between?(0, 7)
+  result_coor << [x_orig, y_now]
+
+  if $board[x_orig][y_now].has
+    break
+  end
+end
+end
+end
+
+rslt = []
+for coor in result_coor
+  rslt << $board[coor[0]][coor[1]]
+end
+
+rslt
 end
 
 def build_king_los
-	x_orig = self.square.coor[0]
-	y_orig = self.square.coor[1]
-	result_coor = []
+  x_orig = self.square.coor[0]
+  y_orig = self.square.coor[1]
+  result_coor = []
 
-	arr = [-1, 0, 1]
-	
-	for add_x in arr
-	  for add_y in arr
-	  	x_now = x_orig + add_x
-	  	y_now = y_orig + add_y
-		
-	  	if x_now.between?(0, 7) && y_now.between?(0, 7)
-		    result_coor << [x_now, y_now]
-		  end
+  arr = [-1, 0, 1]
+
+  for add_x in arr
+    for add_y in arr
+      x_now = x_orig + add_x
+      y_now = y_orig + add_y
+
+      if x_now.between?(0, 7) && y_now.between?(0, 7)
+        result_coor << [x_now, y_now]
+      end
     end
   end
 
-	rslt = []
-	for coor in result_coor
-	  rslt << $board[coor[0]][coor[1]]
-	end
-	
-	rslt
+  rslt = []
+  for coor in result_coor
+    rslt << $board[coor[0]][coor[1]]
+  end
+
+  rslt
 end
 
 def test_suite
-  
+
   def test_has_icon_on_square
     game = Game.new()
     game.set_up_board()
@@ -180,15 +132,15 @@ def test_suite
     fails = []
     tests = {
       test_has_icon_on_square: test_has_icon_on_square()
-    }
-  
+      }
+
     tests.each do |key, val|
       if !val
-	    fails << key
-	    end
+        fails << key
+      end
     end
-  
-  fails
+
+    fails
   end
 end
 

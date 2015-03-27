@@ -1,3 +1,4 @@
+require_relative 'coor_helper'
 require_relative 'piece'
 
 class King < Piece
