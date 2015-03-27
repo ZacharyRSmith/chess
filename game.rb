@@ -14,19 +14,18 @@ class Game
 
   attr_accessor :board, :moved
 
-  def turn
-    #set_player
+  def change_player
     case $player
     when "," then $player = " "
     when " " then $player = ","
     end
+  end
 
+  def turn
+    self.change_player()
     self.show_board()
-
     self.moved = false
     until self.moved == true
-
-    #  ask_move
       puts "Player #{$player}, please select start coor X..."
       start_x = gets.chomp.to_i
       puts "Player #{$player}, please select start coor Y..."
@@ -35,9 +34,6 @@ class Game
       tar_x = gets.chomp.to_i
       puts "Player #{$player}, please select target coor Y..."
       tar_y = gets.chomp.to_i
-
-    #  if "save"...
-
     #  move()
       move_message = move([start_x, start_y], [tar_x, tar_y], $player)
       puts move_message
