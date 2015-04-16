@@ -112,13 +112,13 @@ class Game
   def build_board
     board = []
 
-    for x in 0..7
+    for col_i in 0..7
       board << []
     end
 
-    board.each_with_index do |x, i|
-      for y in 0..7
-        x << Square.new([i, y])
+    board.each_with_index do |col, col_i|
+      for row_i in 0..7
+        col << Square.new([col_i, row_i])
       end
     end
 
