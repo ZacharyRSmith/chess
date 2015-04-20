@@ -1,15 +1,7 @@
-#remaining: en passe for Pawn, promote for Pawn, castling, re-calc LOS,
-#look for check/checkmate, delete piece from board
 puts "chess.rb initiated."
 
-require_relative 'bishop'
+Dir[File.dirname(__FILE__) + '/pieces/*.rb'].each { |file| require file }
 require_relative 'game'
-require_relative 'king'
-require_relative 'knight'
-require_relative 'pawn'
-require_relative 'piece'
-require_relative 'queen'
-require_relative 'rook'
 require_relative 'square'
 
 def test_suite

@@ -1,4 +1,4 @@
-require_relative 'coor_helper'
+require_relative '../coor_helper'
 require_relative 'piece'
 
 class Pawn < Piece
