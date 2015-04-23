@@ -87,7 +87,12 @@ class Game
     self.change_player()
     self.show_board()
 
-    start_squ  = self.prompt_start_squ()
+    start_squ = nil
+    until start_squ && start_squ.has() && !start_squ.has().los.empty?
+      start_squ  = self.prompt_start_squ()
+    end
+      # TEST CODE:
+#     puts start_squ.has().los
     target_squ = self.prompt_target_squ(start_squ.has())
     self.move_piece(start_squ, start_squ.has(), target_squ)
     # FIXME Check for check/checkmate
