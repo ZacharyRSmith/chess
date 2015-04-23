@@ -1,37 +1,28 @@
 def build_bishop_los
   x_orig = self.square.coor[0]
   y_orig = self.square.coor[1]
-  result_coor = []
+  rslt_squares = []
+  ary_1s = [-1, 1]
 
-  arr_1 = [-1, 1]
-
-  for add_x in arr_1
-    for add_y in arr_1
-      x_now = x_orig
-      y_now = y_orig
+  for add_x in ary_1s
+    for add_y in ary_1s
+      x_now = x_orig + add_x
+      y_now = y_orig + add_y
 
       until !x_now.between?(0, 7) || !y_now.between?(0, 7)
+        if $board[x_now][y_now].has() &&
+                                    $board[x_now][y_now].has().owner == $player
+          break
+        end
+
+        rslt_squares << $board[x_now][y_now]
+        if $board[x_now][y_now].has()
+          break
+        end
         x_now = x_now + add_x
         y_now = y_now + add_y
-
-        if x_now.between?(0, 7) && y_now.between?(0, 7)
-          if $board[x_now][y_now].has() &&
-                                    $board[x_now][y_now].has().owner == $player
-            break
-          end
-          result_coor << [x_now, y_now]
-
-          if $board[x_now][y_now].has
-            break
-          end
-        end
       end
     end
-  end
-
-  rslt_squares = []
-  for coor in result_coor
-    rslt_squares << $board[coor[0]][coor[1]]
   end
 
   rslt_squares
@@ -50,6 +41,7 @@ def build_rook_los
     until !x_now.between?(0, 7)
       x_now = x_now + add_x
 
+      # Redundant after the above until loop?
       if x_now.between?(0, 7)
         result_coor << [x_now, y_orig]
 
