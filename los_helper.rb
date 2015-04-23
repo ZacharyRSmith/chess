@@ -15,6 +15,10 @@ def build_bishop_los
         y_now = y_now + add_y
 
         if x_now.between?(0, 7) && y_now.between?(0, 7)
+          if $board[x_now][y_now].has() &&
+                                    $board[x_now][y_now].has().owner == $player
+            break
+          end
           result_coor << [x_now, y_now]
 
           if $board[x_now][y_now].has
@@ -25,12 +29,12 @@ def build_bishop_los
     end
   end
 
-  rslt = []
+  rslt_squares = []
   for coor in result_coor
-    rslt << $board[coor[0]][coor[1]]
+    rslt_squares << $board[coor[0]][coor[1]]
   end
 
-  rslt
+  rslt_squares
 end
 
 def build_rook_los
