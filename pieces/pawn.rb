@@ -5,7 +5,6 @@ class Pawn < Piece
   def initialize(square, owner, moved = false)
     super(square, owner, moved)
     @icon = "p"
-    @los = self.los()
   end
 
   def los

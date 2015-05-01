@@ -6,7 +6,6 @@ class King < Piece
     super(square, owner, moved)
     @icon = "K"
     @moved = false
-    @los = self.los()
   end
 
   def los

@@ -5,5 +5,5 @@ class Piece
     @moved = moved
   end
 
-  attr_accessor :icon, :owner, :square, :moved, :los
+  attr_accessor :icon, :owner, :square, :moved
 end

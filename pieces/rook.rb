@@ -7,7 +7,6 @@ class Rook < Piece
     super(square, owner, moved)
     @icon = "R"
     @moved = false
-    @los = self.los()
   end
 
   def los
