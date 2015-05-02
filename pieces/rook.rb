@@ -1,5 +1,4 @@
 require_relative '../coor_helper'
-require_relative '../los_helper'
 require_relative 'piece'
 
 class Rook < Piece
