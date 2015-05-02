@@ -10,28 +10,51 @@ class Knight < Piece
   def los
     x_orig = self.square.coor[0]
     y_orig = self.square.coor[1]
-    result_coor = []
+    rslt_squares = []
+    self.can_move = FALSE
 
-    arr_2 = [-2, 2]
-    arr_1 = [-1, 1]
+    for add_x in [-2, 2]
+      for add_y in [-1, 1]
+        x_now = x_orig + add_x
+        y_now = y_orig + add_y
 
-    for add_x in arr_2
-      for add_y in arr_1
-        result_coor = new_coor_helper(x_orig, y_orig, add_x, add_y, result_coor)
+        if !x_now.between?(0, 7) || !y_now.between?(0, 7)
+          next
+        end
+        crnt_square = $board[x_now][y_now]
+        if crnt_square.has() && crnt_square.has().owner == $player
+          rslt_squares << crnt_square
+        elsif crnt_square.has()
+          rslt_squares << crnt_square
+          self.can_move = TRUE
+        else # crnt_square has no piece.
+          rslt_squares << crnt_square
+          self.can_move = TRUE
+        end
       end
     end
 
-    for add_y in arr_2
-      for add_x in arr_1
-        result_coor = new_coor_helper(x_orig, y_orig, add_x, add_y, result_coor)
+    for add_y in [-2, 2]
+      for add_x in [-1, 1]
+        x_now = x_orig + add_x
+        y_now = y_orig + add_y
+
+        if !x_now.between?(0, 7) || !y_now.between?(0, 7)
+          next
+        end
+        crnt_square = $board[x_now][y_now]
+        if crnt_square.has() && crnt_square.has().owner == $player
+          rslt_squares << crnt_square
+        elsif crnt_square.has()
+          rslt_squares << crnt_square
+          self.can_move = TRUE
+        else # crnt_square has no piece.
+          rslt_squares << crnt_square
+          self.can_move = TRUE
+        end
       end
     end
 
-    rslt = []
-    for coor in result_coor
-      rslt << $board[coor[0]][coor[1]]
-    end
-
-    rslt
+    rslt_squares
   end
 end
