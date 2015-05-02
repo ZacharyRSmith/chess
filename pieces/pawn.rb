@@ -4,38 +4,42 @@ require_relative 'piece'
 class Pawn < Piece
   def initialize(square, owner, moved = false)
     super(square, owner, moved)
+
+    if @owner == " "
+      @direction = -1
+    else # @owner == ","
+      @direction = 1
+    end
     @icon = "p"
   end
 
   def los
-    rslt = []
+    rslt_squares = []
+    @can_move    = FALSE
 
-    case @owner
-    when " "
-      then direction = -1
-    when ","
-      then direction = 1
+    squ_in_front = squ_at_relative_coor(0, @direction * 1)
+    if !squ_in_front.has()
+      rslt_squares << squ_in_front
+      @can_move = TRUE
     end
 
-    squ_in_front = squ_at_relative_coor(0, direction * 1)
-    rslt << squ_in_front unless squ_in_front.has()
-
-    if self.moved == false
-      squ_two_in_front = squ_at_relative_coor(0, direction * 2)
-	    rslt << squ_two_in_front unless squ_two_in_front.has() || squ_in_front.has()
+    if !@moved && !squ_in_front.has()
+      squ_two_in_front = squ_at_relative_coor(0, @direction * 2)
+      if !squ_two_in_front.has()
+  	    rslt_squares << squ_two_in_front
+        @can_move = TRUE
+      end
  	  end
 
- 	  arr = [-1, 1]
- 	  for add_x in arr
- 	    squ_at_front_diag = squ_at_relative_coor(add_x, direction * 1)
+ 	  for add_x in [-1, 1]
+ 	    squ_at_front_diag = squ_at_relative_coor(add_x, @direction * 1)
 
- 	    if squ_at_front_diag
- 	      if squ_at_front_diag.has()
- 	        rslt << squ_at_front_diag
- 	      end
+ 	    if squ_at_front_diag && squ_at_front_diag.has() && squ_at_front_diag.has().owner != @owner
+        rslt_squares << squ_at_front_diag
+        @can_move = TRUE
  	    end
     end
 
-    rslt
+    rslt_squares
   end
 end
