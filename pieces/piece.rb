@@ -1,5 +1,6 @@
 class Piece
   def initialize(square, owner, moved = false)
+    @in_los_of = { }
     @square    = square
     @owner     = owner
     @moved     = moved
