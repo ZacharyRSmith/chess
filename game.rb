@@ -39,19 +39,30 @@ class Game
     input = gets.chomp
     start_x = self.get_ind_from_ltr(input[0].downcase)
     start_y = input[1].to_i - 1
+
     if !start_x.between?(0, 7) || !start_y.between?(0, 7)
       puts "There is no square #{input}."
       return self.prompt_start_squ()
     end
+
     start_squ = $board[start_x][start_y]
     if !start_squ.has()
       puts "There is no piece at square #{input}!"
       return self.prompt_start_squ()
     end
-    if start_squ.has().owner != $player
+
+    start_piece = start_squ.has()
+    if start_piece.owner != $player
       puts "You cannot move your opponent's piece!"
       return self.prompt_start_squ()
     end
+
+    start_piece.los()
+    if !start_piece.can_move
+      puts "This piece cannot move!"
+      return self.prompt_start_squ()
+    end
+    # FIXME Guard against self-check
 
     puts "You selected square: #{input}."
     start_squ
@@ -87,12 +98,7 @@ class Game
     self.change_player()
     self.show_board()
 
-    start_squ = nil
-    until start_squ && start_squ.has() && !start_squ.has().los.empty?
-      start_squ  = self.prompt_start_squ()
-    end
-      # TEST CODE:
-#     puts start_squ.has().los
+    start_squ  = self.prompt_start_squ()
     target_squ = self.prompt_target_squ(start_squ.has())
     self.move_piece(start_squ, start_squ.has(), target_squ)
     # FIXME Check for check/checkmate
@@ -200,7 +206,7 @@ class Game
       show_row_arr = build_show_row_arr(row_num)
       print "\n  |#{show_row_arr[0]}"
       print "\n#{row_num + 1} |#{show_row_arr[1]}"
-      print "\n  |#{show_row_arr[2]}" 
+      print "\n  |#{show_row_arr[2]}"
     end
   end
 end
