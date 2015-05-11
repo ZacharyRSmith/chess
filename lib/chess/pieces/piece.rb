@@ -1,5 +1,6 @@
 class Piece
   def initialize(owner:, square:)
+    @board     = square.board
     @can_move  = FALSE
     # Every piece should have an @icon, but I am leaving that to child classes.
     # @icon      = "X"
@@ -11,6 +12,7 @@ class Piece
   end
 
   attr_accessor :can_move, :icon, :in_los_of, :moved, :owner, :square
+  attr_reader   :los
 
   def get_los
     @los
