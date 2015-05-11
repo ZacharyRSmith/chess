@@ -1,18 +1,19 @@
+require_relative 'board'
+
 class Game
   def initialize
-    $board = build_board()
-    self.set_up_board()
-
+    $board = Board.new()
+    $board.set_up_pawns()
+    $board.set_up_back_rows()
     $game_over = false
     $player = ","
 
-    @moved = false
     until $game_over == true
-      turn()
+      self.turn()
     end
   end
 
-  attr_accessor :board, :moved
+  attr_accessor :board
 
   def change_player
     case $player
@@ -34,81 +35,81 @@ class Game
     end
   end
 
-  def prompt_start_squ
+  def prompt_start_square
     puts "Player #{$player}, please enter in the square of the piece you want to move (eg, 'e4')..."
     input = gets.chomp
     start_x = self.get_ind_from_ltr(input[0].downcase)
     start_y = input[1].to_i - 1
 
-    if !start_x.between?(0, 7) || !start_y.between?(0, 7)
+    start_sqr = $board.get_square(start_x, start_y)
+    if !start_sqr
       puts "There is no square #{input}."
-      return self.prompt_start_squ()
+      return self.prompt_start_square()
     end
-
-    start_squ = $board[start_x][start_y]
-    if !start_squ.has()
+    if !start_sqr.piece
       puts "There is no piece at square #{input}!"
-      return self.prompt_start_squ()
+      return self.prompt_start_square()
     end
 
-    start_piece = start_squ.has()
+    start_piece = start_sqr.piece
     if start_piece.owner != $player
       puts "You cannot move your opponent's piece!"
-      return self.prompt_start_squ()
+      return self.prompt_start_square()
     end
 
-    start_piece.los()
+    # FIXME Should not have to get/set los
+    start_piece.set_los()
     if !start_piece.can_move
       puts "This piece cannot move!"
-      return self.prompt_start_squ()
+      return self.prompt_start_square()
     end
     # FIXME Guard against self-check
 
     puts "You selected square: #{input}."
-    start_squ
+    start_sqr
   end
 
-  def prompt_target_squ(moving_piece)
+  def prompt_target_square(moving_piece)
     puts "Now please enter in the square to where you want to move..."
     input = gets.chomp
     target_x = self.get_ind_from_ltr(input[0].downcase)
     target_y = input[1].to_i - 1
     if !target_x.between?(0, 7) || !target_y.between?(0, 7)
       puts "There is no square #{input}."
-      return self.prompt_target_squ(moving_piece)
+      return self.prompt_target_square(moving_piece)
     end
-    target_squ = $board[target_x][target_y]
-    if target_squ.has()
-      if target_squ.has().owner == $player
+    target_sqr = $board.get_square(target_x, target_y)
+    if target_sqr.piece
+      if target_sqr.piece.owner == $player
         puts "You cannot attack your own piece!"
-        return self.prompt_target_squ(moving_piece)
+        return self.prompt_target_square(moving_piece)
       end
     end
-    if !moving_piece.los.include?(target_squ)
+    if !moving_piece.get_los.include?(target_sqr)
       puts "Error: Your piece cannot maneuver in that way!"
-      return self.prompt_target_squ(moving_piece)
+      return self.prompt_target_square(moving_piece)
     end
     #FIXME Guard against self-check
 
     puts "You selected target square: #{input}."
-    target_squ
+    target_sqr
   end
 
   def turn
     self.change_player()
-    self.show_board()
+    $board.render()
 
-    start_squ  = self.prompt_start_squ()
-    target_squ = self.prompt_target_squ(start_squ.has())
-    self.move_piece(start_squ, start_squ.has(), target_squ)
+    start_sqr  = self.prompt_start_square()
+    target_sqr = self.prompt_target_square(start_sqr.piece)
+    self.move_piece(start_sqr, start_sqr.piece, target_sqr)
     # FIXME Check for check/checkmate
   end
 
-  def move_piece(start_squ, piece, tar_squ)
-    piece.square  = tar_squ
-    start_squ.has = nil
-    tar_squ.has   = piece
-    piece.moved   = true
+  def move_piece(start_sqr, piece, tar_squ)
+    piece.square    = tar_squ
+    start_sqr.piece = nil
+    tar_squ.piece   = piece
+    piece.moved     = true
   end
 
   def game_over
@@ -118,95 +119,5 @@ class Game
   end
 
   def load
-  end
-
-  def build_board
-    board = []
-
-    for col_i in 0..7
-      board << []
-    end
-
-    board.each_with_index do |col, col_i|
-      for row_i in 0..7
-        col << Square.new([col_i, row_i])
-      end
-    end
-
-    board
-  end
-
-  def set_up_board
-    set_up_pawns()
-    set_up_back_rows()
-  end
-
-  def set_up_back_rows
-    owners = [" ", ","]
-
-    for owner in owners
-      if owner == " "
-        row = 7
-      else
-        row = 0
-      end
-
-      for col in 0..7
-        case col
-        when 0, 7
-          then $board[col][row].has=(Rook.new($board[col][row], owner))
-        when 1, 6
-          then $board[col][row].has=(Knight.new($board[col][row], owner))
-        when 2, 5
-          then $board[col][row].has=(Bishop.new($board[col][row], owner))
-        when 3
-          then $board[col][row].has=(Queen.new($board[col][row], owner))
-        when 4
-          then $board[col][row].has=(King.new($board[col][row], owner))
-        end
-      end
-    end
-  end
-
-  def set_up_pawns
-    owners = [" ", ","]
-
-    for owner in owners
-      case owner
-      when " " then row = 6
-      when "," then row = 1
-      end
-
-      for col in 0..7
-        squ = $board[col][row]
-        #problem
-        squ.has=(Pawn.new(squ, owner))
-      end
-    end
-  end
-
-  def build_show_row_arr(row_num)
-    top_3rd = ""
-    mid_3rd = ""
-    btm_3rd = ""
-
-    for col_num in 0..7
-      top_3rd << "   |"
-      mid_3rd << "#{$board[col_num][row_num].show}|"
-      btm_3rd << "___|"
-    end
-
-    show_row_arr = [top_3rd, mid_3rd, btm_3rd]
-    show_row_arr
-  end
-
-  def show_board
-    print "   _a_ _b_ _c_ _d_ _e_ _f_ _g_ _h_ "
-    for row_num in 0..7
-      show_row_arr = build_show_row_arr(row_num)
-      print "\n  |#{show_row_arr[0]}"
-      print "\n#{row_num + 1} |#{show_row_arr[1]}"
-      print "\n  |#{show_row_arr[2]}"
-    end
   end
 end

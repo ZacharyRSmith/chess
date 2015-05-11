@@ -4,42 +4,48 @@ require_relative 'piece'
 class Pawn < Piece
   def initialize(square, owner, moved = false)
     super(square, owner, moved)
-
-    if @owner == " "
-      @direction = -1
-    else # @owner == ","
-      @direction = 1
-    end
-    @icon = "p"
+    # direction determines how this pawn can move.
+    @direction = get_direction(owner)
+    @icon      = "p"
   end
 
-  def los
-    rslt_squares = []
-    @can_move    = FALSE
+  def get_direction(owner)
+    # direction determines how this pawn can move.
+    if owner == " "
+      return -1
+    else # @owner == ","
+      return 1
+    end
+  end
 
-    squ_in_front = squ_at_relative_coor(0, @direction * 1)
-    if !squ_in_front.has()
-      rslt_squares << squ_in_front
+  def set_los
+    x_orig = @square.coordinates[0]
+    y_orig = @square.coordinates[1]
+    rslt_sqrs = []
+    @can_move = FALSE
+
+    sqr_in_front = $board.get_square(x_orig, y_orig + @direction)
+    if !sqr_in_front.piece
       @can_move = TRUE
+      rslt_sqrs << sqr_in_front
     end
 
-    if !@moved && !squ_in_front.has()
-      squ_two_in_front = squ_at_relative_coor(0, @direction * 2)
-      if !squ_two_in_front.has()
-  	    rslt_squares << squ_two_in_front
-        @can_move = TRUE
+    if !@moved && !sqr_in_front.piece
+      sqr_two_in_front = $board.get_square(x_orig, y_orig + 2*@direction)
+      if !sqr_two_in_front.piece
+  	    rslt_sqrs << sqr_two_in_front
       end
  	  end
 
  	  for add_x in [-1, 1]
- 	    squ_at_front_diag = squ_at_relative_coor(add_x, @direction * 1)
-
- 	    if squ_at_front_diag && squ_at_front_diag.has() && squ_at_front_diag.has().owner != @owner
-        rslt_squares << squ_at_front_diag
+      sqr_at_front_diag = $board.get_square(x_orig + add_x, y_orig + @direction)
+      if sqr_at_front_diag && sqr_at_front_diag.piece &&
+                                         sqr_at_front_diag.piece.owner != @owner
         @can_move = TRUE
+        rslt_sqrs << sqr_at_front_diag
  	    end
     end
 
-    rslt_squares
+    @los = rslt_sqrs
   end
 end

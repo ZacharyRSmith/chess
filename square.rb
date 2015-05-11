@@ -1,20 +1,20 @@
 class Square
-  def initialize(coor, has = nil)
-    @coor = coor
-    @has = has
+  def initialize(coordinates, piece = nil)
+    @coordinates = coordinates
+    @piece       = piece
   end
 
-  attr_accessor :coor, :has
+  attr_accessor :coordinates, :piece
 
-  def has=(piece)
-    @has = piece
-  end
+#   def piece=(piece)
+#     @piece = piece
+#   end
 
   def show
-    if !self.has()
+    if !self.piece()
       "   "
     else
-      " " + self.has.icon() + self.has.owner()
+      " " + self.piece.icon() + self.piece.owner()
     end
   end
 end

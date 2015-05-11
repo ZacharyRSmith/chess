@@ -4,7 +4,7 @@ def squ_at_relative_coor(add_x, add_y)
   new_y = self.square.coor[1] + add_y
 
   if new_x.between?(0, 7) && new_y.between?(0, 7)
-    return $board[new_x][new_y]
+    return $board.sqrs_ary[new_x][new_y]
   end
 end
 

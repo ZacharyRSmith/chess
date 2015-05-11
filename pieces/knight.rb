@@ -1,4 +1,5 @@
 require_relative '../coor_helper'
+require_relative '../_helpers'
 require_relative 'piece'
 
 class Knight < Piece
@@ -7,29 +8,32 @@ class Knight < Piece
     @icon = "N"
   end
 
-  def los
-    x_orig = self.square.coor[0]
-    y_orig = self.square.coor[1]
-    rslt_squares = []
-    self.can_move = FALSE
+  def set_los
+    coordinates = @square.coordinates
+    x_orig = coordinates[0]
+    y_orig = coordinates[1]
+    rslt_sqrs = []
+    @can_move = FALSE
 
     for add_x in [-2, 2]
       for add_y in [-1, 1]
         x_now = x_orig + add_x
         y_now = y_orig + add_y
-
-        if !x_now.between?(0, 7) || !y_now.between?(0, 7)
+        crnt_sqr = $board.get_square(x_now, y_now)
+        if !crnt_sqr
           next
         end
-        crnt_square = $board[x_now][y_now]
-        if crnt_square.has() && crnt_square.has().owner == $player
-          rslt_squares << crnt_square
-        elsif crnt_square.has()
-          rslt_squares << crnt_square
-          self.can_move = TRUE
-        else # crnt_square has no piece.
-          rslt_squares << crnt_square
-          self.can_move = TRUE
+
+        if crnt_sqr.piece
+          if crnt_sqr.piece.owner == $player
+            rslt_sqrs << crnt_sqr
+          else
+            @can_move = TRUE
+            rslt_sqrs << crnt_sqr
+          end
+        else
+          rslt_sqrs << crnt_sqr
+          @can_move = TRUE
         end
       end
     end
@@ -38,23 +42,25 @@ class Knight < Piece
       for add_x in [-1, 1]
         x_now = x_orig + add_x
         y_now = y_orig + add_y
-
-        if !x_now.between?(0, 7) || !y_now.between?(0, 7)
+        crnt_sqr = $board.get_square(x_now, y_now)
+        if !crnt_sqr
           next
         end
-        crnt_square = $board[x_now][y_now]
-        if crnt_square.has() && crnt_square.has().owner == $player
-          rslt_squares << crnt_square
-        elsif crnt_square.has()
-          rslt_squares << crnt_square
-          self.can_move = TRUE
-        else # crnt_square has no piece.
-          rslt_squares << crnt_square
-          self.can_move = TRUE
+
+        if crnt_sqr.piece
+          if crnt_sqr.piece.owner == $player
+            rslt_sqrs << crnt_sqr
+          else
+            @can_move = TRUE
+            rslt_sqrs << crnt_sqr
+          end
+        else
+          @can_move = TRUE
+          rslt_sqrs << crnt_sqr
         end
       end
     end
 
-    rslt_squares
+    @los = rslt_sqrs
   end
 end

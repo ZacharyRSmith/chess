@@ -7,37 +7,35 @@ class Bishop < Piece
     @icon = "B"
   end
 
-  def los
-    x_orig = self.square.coor[0]
-    y_orig = self.square.coor[1]
-    rslt_squares = []
-    self.can_move = FALSE
+  def set_los
+    x_orig = @square.coordinates[0]
+    y_orig = @square.coordinates[1]
+    rslt_sqrs = []
+    @can_move = FALSE
 
     for add_x in [-1, 1]
       for add_y in [-1, 1]
         x_now = x_orig + add_x
         y_now = y_orig + add_y
 
-        until !x_now.between?(0, 7) || !y_now.between?(0, 7)
-          crnt_square = $board[x_now][y_now]
-
-          if crnt_square.has() && crnt_square.has().owner == $player
-            rslt_squares << crnt_square
+        crnt_sqr = $board.get_square(x_now + add_x, y_now + add_y)
+        until !crnt_sqr
+          if crnt_sqr.piece && crnt_sqr.piece.owner == $player
+            rslt_squares << crnt_sqr
             break
-          elsif crnt_square.has()
-            rslt_squares << crnt_square
-            self.can_move = TRUE
+          elsif crnt_sqr.piece
+            @can_move = TRUE
+            rslt_squares << crnt_sqr
             break
           else
-            rslt_squares << crnt_square
-            self.can_move = TRUE
+            @can_move = TRUE
+            rslt_squares << crnt_sqr
           end
-          x_now = x_now + add_x
-          y_now = y_now + add_y
+          crnt_sqr = $board.get_square(x_now + add_x, y_now + add_y)
         end
       end
     end
 
-    rslt_squares
+    @los = rslt_squares
   end
 end

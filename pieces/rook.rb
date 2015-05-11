@@ -5,7 +5,6 @@ class Rook < Piece
   def initialize(square, owner, moved = false)
     super(square, owner, moved)
     @icon = "R"
-    @moved = false
   end
 
   def los

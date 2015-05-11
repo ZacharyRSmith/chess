@@ -1,4 +1,5 @@
 require_relative '../coor_helper'
+# bishop and rook are imported to help Queen.los()
 require_relative 'bishop'
 require_relative 'rook'
 require_relative 'piece'
