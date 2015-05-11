@@ -1,3 +1,4 @@
+Dir[File.dirname(__FILE__) + '/pieces/*.rb'].each { |file| require file }
 require_relative 'square'
 
 class Board

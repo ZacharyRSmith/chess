@@ -1,5 +1,4 @@
 require_relative '../coor_helper'
-require_relative '../_helpers'
 require_relative 'piece'
 
 class Knight < Piece
