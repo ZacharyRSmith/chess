@@ -18,24 +18,26 @@ class Bishop < Piece
         x_now = x_orig + add_x
         y_now = y_orig + add_y
 
-        crnt_sqr = $board.get_square(x_now + add_x, y_now + add_y)
+        crnt_sqr = @board.get_square(x_now, y_now)
         until !crnt_sqr
           if crnt_sqr.piece && crnt_sqr.piece.owner == $player
-            rslt_squares << crnt_sqr
+            rslt_sqrs << crnt_sqr
             break
           elsif crnt_sqr.piece
             @can_move = TRUE
-            rslt_squares << crnt_sqr
+            rslt_sqrs << crnt_sqr
             break
           else
             @can_move = TRUE
-            rslt_squares << crnt_sqr
+            rslt_sqrs << crnt_sqr
           end
-          crnt_sqr = $board.get_square(x_now + add_x, y_now + add_y)
+          x_now = x_now + add_x
+          y_now = y_now + add_y
+          crnt_sqr = @board.get_square(x_now, y_now)
         end
       end
     end
 
-    @los = rslt_squares
+    @los = rslt_sqrs
   end
 end
