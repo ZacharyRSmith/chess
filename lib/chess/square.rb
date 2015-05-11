@@ -6,6 +6,7 @@ class Square
   end
 
   attr_accessor :coordinates, :piece
+  attr_reader   :board
 
 #   def piece=(piece)
 #     @piece = piece
