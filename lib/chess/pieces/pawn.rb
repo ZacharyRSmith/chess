@@ -2,8 +2,8 @@ require_relative '../coor_helper'
 require_relative 'piece'
 
 class Pawn < Piece
-  def initialize(square, owner, moved = false)
-    super(square, owner, moved)
+  def initialize(owner:, square:)
+    super(owner: owner, square: square)
     # direction determines how this pawn can move.
     @direction = get_direction(owner)
     @icon      = "p"

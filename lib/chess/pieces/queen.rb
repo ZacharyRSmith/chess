@@ -5,8 +5,8 @@ require_relative 'rook'
 require_relative 'piece'
 
 class Queen < Piece
-  def initialize(square, owner, moved = false)
-    super(square, owner, moved)
+  def initialize(owner:, square:)
+    super(owner: owner, square: square)
     @icon = "Q"
   end
 

@@ -1,5 +1,6 @@
 class Square
-  def initialize(coordinates, piece = nil)
+  def initialize(board:, coordinates:, piece: nil)
+    @board       = board
     @coordinates = coordinates
     @piece       = piece
   end

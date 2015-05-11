@@ -1,11 +1,11 @@
 class Piece
-  def initialize(square, owner, moved = false)
+  def initialize(owner:, square:)
     @can_move  = FALSE
     # Every piece should have an @icon, but I am leaving that to child classes.
     # @icon      = "X"
     @in_los_of = []
     @los       = []
-    @moved     = moved
+    @moved     = FALSE
     @owner     = owner
     @square    = square
   end

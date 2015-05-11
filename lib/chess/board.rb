@@ -6,8 +6,6 @@ class Board
     @squares_ary = self.gen_sqrs_ary()
   end
 
-#   attr_accessor :sqrs_ary
-
   def gen_sqrs_ary
     sqrs_ary = []
 
@@ -17,7 +15,7 @@ class Board
 
     sqrs_ary.each_with_index do |col, col_i|
       for row_i in 0..7
-        col << Square.new([col_i, row_i])
+        col << Square.new(board: self, coordinates: [col_i, row_i])
       end
     end
 
@@ -60,15 +58,20 @@ class Board
       for col in 0..7
         case col
         when 0, 7
-          then @squares_ary[col][row].piece = Rook.new(@squares_ary[col][row], owner)
+          then sqr = self.get_square(col, row)
+            sqr.piece = Rook.new(owner: owner, square: sqr)
         when 1, 6
-          then @squares_ary[col][row].piece = Knight.new(@squares_ary[col][row], owner)
+          then sqr = self.get_square(col, row)
+                sqr.piece = Knight.new(owner: owner, square: sqr)
         when 2, 5
-          then @squares_ary[col][row].piece = Bishop.new(@squares_ary[col][row], owner)
+          then sqr = self.get_square(col, row)
+            sqr.piece = Bishop.new(owner: owner, square: sqr)
         when 3
-          then @squares_ary[col][row].piece = Queen.new(@squares_ary[col][row], owner)
+          then sqr = self.get_square(col, row)
+            sqr.piece = Queen.new(owner: owner, square: sqr)
         when 4
-          then @squares_ary[col][row].piece = King.new(@squares_ary[col][row], owner)
+          then sqr = self.get_square(col, row)
+            sqr.piece = King.new(owner: owner, square: sqr)
         end
       end
     end
@@ -84,8 +87,8 @@ class Board
       end
 
       for col in 0..7
-        sqr = @squares_ary[col][row]
-        sqr.piece = Pawn.new(sqr, owner)
+        sqr = self.get_square(col, row)
+        sqr.piece = Pawn.new(owner: owner, square: sqr)
       end
     end
   end

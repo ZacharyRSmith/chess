@@ -2,8 +2,8 @@ require_relative '../coor_helper'
 require_relative 'piece'
 
 class Rook < Piece
-  def initialize(square, owner, moved = false)
-    super(square, owner, moved)
+  def initialize(owner:, square:)
+    super(owner: owner, square: square)
     @icon = "R"
   end
 

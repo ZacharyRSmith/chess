@@ -3,9 +3,10 @@ require './lib/chess/square'
 require './lib/chess/board'
 require 'minitest/autorun'
 
-def gen_bishop(coords: [0, 0], owner_arg: ",")
-  sqr = Square.new(coords)
-  Bishop.new(sqr, owner = owner_arg)
+def gen_bishop(coordinates: [0, 0], owner: ",")
+  brd = Board.new()
+  sqr = Square.new(board: brd, coordinates: coordinates)
+  Bishop.new(square: sqr, owner: owner)
 end
 
 class TestBishop < Minitest::Test
@@ -16,12 +17,12 @@ class TestBishop < Minitest::Test
   end
 
   def test_owner_with_comma
-    bishop = gen_bishop(owner_arg: ",")
+    bishop = gen_bishop(owner: ",")
     assert_equal(",", bishop.owner)
   end
 
   def test_owner_with_blank
-    bishop = gen_bishop(owner_arg: " ")
+    bishop = gen_bishop(owner: " ")
     assert_equal(" ", bishop.owner)
   end
 
