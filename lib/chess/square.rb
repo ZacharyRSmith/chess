@@ -13,10 +13,10 @@ class Square
 #   end
 
   def show
-    if !self.piece()
+    if !@piece
       "   "
     else
-      " " + self.piece.icon() + self.piece.owner()
+      " " + self.piece.icon + self.piece.owner
     end
   end
 end

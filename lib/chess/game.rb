@@ -85,7 +85,7 @@ class Game
         return self.prompt_target_square(moving_piece)
       end
     end
-    if !moving_piece.get_los.include?(target_sqr)
+    if !moving_piece.los.include?(target_sqr)
       puts "Error: Your piece cannot maneuver in that way!"
       return self.prompt_target_square(moving_piece)
     end

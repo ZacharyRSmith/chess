@@ -13,8 +13,4 @@ class Piece
 
   attr_accessor :can_move, :icon, :in_los_of, :moved, :owner, :square
   attr_reader   :los
-
-  def get_los
-    @los
-  end
 end

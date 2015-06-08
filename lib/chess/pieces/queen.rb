@@ -11,10 +11,10 @@ class Queen < Piece
   end
 
   def build_bishop_los()
-    x_orig = self.square.coor[0]
-    y_orig = self.square.coor[1]
+    x_orig = @square.coor[0]
+    y_orig = @square.coor[1]
     rslt_squares = []
-    self.can_move = FALSE
+    @can_move = FALSE
 
     for add_x in [-1, 1]
       for add_y in [-1, 1]
@@ -29,11 +29,11 @@ class Queen < Piece
             break
           elsif crnt_square.has()
             rslt_squares << crnt_square
-            self.can_move = TRUE
+            @can_move = TRUE
             break
           else
             rslt_squares << crnt_square
-            self.can_move = TRUE
+            @can_move = TRUE
           end
           x_now = x_now + add_x
           y_now = y_now + add_y
@@ -45,8 +45,8 @@ class Queen < Piece
   end
 
   def build_rook_los
-    x_orig = self.square.coor[0]
-    y_orig = self.square.coor[1]
+    x_orig = @square.coor[0]
+    y_orig = @square.coor[1]
     rslt_squares = []
 
     for add_x in [-1, 1]

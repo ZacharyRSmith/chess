@@ -8,8 +8,8 @@ class Rook < Piece
   end
 
   def los
-    x_orig = self.square.coor[0]
-    y_orig = self.square.coor[1]
+    x_orig = @square.coor[0]
+    y_orig = @square.coor[1]
     rslt_squares = []
 
     for add_x in [-1, 1]

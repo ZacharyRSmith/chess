@@ -8,8 +8,8 @@ class King < Piece
   end
 
   def los
-    x_orig = self.square.coor[0]
-    y_orig = self.square.coor[1]
+    x_orig = @square.coor[0]
+    y_orig = @square.coor[1]
     result_coor = []
 
     arr = [-1, 0, 1]
