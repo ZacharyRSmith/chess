@@ -6,11 +6,7 @@ class Game
     @board.set_up_pawns()
     @board.set_up_back_rows()
     @game_over = false
-    @player = ","
-
-    until @game_over == true
-      self.turn()
-    end
+    @player = " "
   end
 
   attr_accessor :board
@@ -19,6 +15,12 @@ class Game
     case @player
     when "," then @player = " "
     when " " then @player = ","
+    end
+  end
+
+  def engine
+    until @game_over == TRUE
+      self.turn()
     end
   end
 
@@ -96,13 +98,13 @@ class Game
   end
 
   def turn
-    self.change_player()
     @board.render()
 
     start_sqr  = self.prompt_start_square()
     target_sqr = self.prompt_target_square(start_sqr.piece)
     self.move_piece(start_sqr, start_sqr.piece, target_sqr)
     # FIXME Check for check/checkmate
+    self.change_player()
   end
 
   def move_piece(start_sqr, piece, tar_squ)
