@@ -9,11 +9,11 @@ def gen_bishop(coordinates: [0, 0], owner: ",")
   Bishop.new(square: sqr, owner: owner)
 end
 
-class TestBishop < Minitest::Test
+class TestBishop < MiniTest::Test
 
   def test_icon
     bishop = gen_bishop()
-    assert_equal("B", bishop.icon)
+    assert_equal("A", bishop.icon)
   end
 
   def test_owner_with_comma
