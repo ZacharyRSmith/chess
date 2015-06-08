@@ -14,7 +14,6 @@ class Queen < Piece
     x_orig = @square.coor[0]
     y_orig = @square.coor[1]
     rslt_squares = []
-    @can_move = FALSE
 
     for add_x in [-1, 1]
       for add_y in [-1, 1]
@@ -48,7 +47,6 @@ class Queen < Piece
     x_orig = @square.coordinates[0]
     y_orig = @square.coordinates[1]
     rslt_squares = []
-    @can_move = FALSE
 
     for add_x in [-1, 1]
       x_now = x_orig + add_x
@@ -98,6 +96,7 @@ class Queen < Piece
   end
 
   def set_los
+    @can_move = FALSE
     @los = self.build_bishop_los() + self.build_rook_los()
   end
 end

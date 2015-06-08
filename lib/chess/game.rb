@@ -67,6 +67,11 @@ class Game
     end
     # FIXME Guard against self-check
 
+    
+    start_piece.los.each do |sqr|
+      print sqr.coordinates, "\n"
+    end
+    
     puts "You selected square: #{input}."
     start_sqr
   end

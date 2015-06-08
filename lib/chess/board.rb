@@ -38,7 +38,7 @@ class Board
   end
 
   def get_square(x, y)
-    puts "#{x}, #{y}"
+#     puts "#{x}, #{y}"
     if !x.between?(0, @squares_ary.size-1) || !y.between?(0, @squares_ary.size-1)
       return nil
     end

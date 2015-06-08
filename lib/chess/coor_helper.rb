@@ -1,5 +1,5 @@
 def squ_at_relative_coor(add_x, add_y)
-  print "\n#{self.square.coor}"
+#   print "\n#{self.square.coor}"
   new_x = self.square.coor[0] + add_x
   new_y = self.square.coor[1] + add_y
 
