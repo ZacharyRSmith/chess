@@ -5,13 +5,15 @@ class Pawn < Piece
   def initialize(owner:, square:)
     super(owner: owner, square: square)
     # direction determines how this pawn can move.
-    @direction = get_direction(owner)
+    @direction = set_direction
     @icon      = "p"
   end
 
-  def get_direction(owner)
+  attr_reader :direction
+
+  def set_direction
     # direction determines how this pawn can move.
-    if owner == " "
+    if @owner == " "
       return -1
     else # @owner == ","
       return 1
@@ -25,16 +27,15 @@ class Pawn < Piece
     @can_move = FALSE
 
     sqr_in_front = @board.get_square(x_orig, y_orig + @direction)
+    rslt_sqrs << sqr_in_front
+
     if !sqr_in_front.piece
       @can_move = TRUE
-      rslt_sqrs << sqr_in_front
     end
 
     if !@moved && !sqr_in_front.piece
       sqr_two_in_front = @board.get_square(x_orig, y_orig + 2*@direction)
-      if !sqr_two_in_front.piece
-  	    rslt_sqrs << sqr_two_in_front
-      end
+      rslt_sqrs << sqr_two_in_front
  	  end
 
  	  for add_x in [-1, 1]
