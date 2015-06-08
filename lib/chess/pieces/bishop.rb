@@ -20,7 +20,7 @@ class Bishop < Piece
 
         crnt_sqr = @board.get_square(x_now, y_now)
         until !crnt_sqr
-          if crnt_sqr.piece && crnt_sqr.piece.owner == $player
+          if crnt_sqr.piece && crnt_sqr.piece.owner == @owner
             rslt_sqrs << crnt_sqr
             break
           elsif crnt_sqr.piece

@@ -27,7 +27,7 @@ class King < Piece
 
     rslt = []
     for coor in result_coor
-      rslt << $board[coor[0]][coor[1]]
+      rslt << @board[coor[0]][coor[1]]
     end
 
     rslt

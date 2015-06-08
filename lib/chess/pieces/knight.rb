@@ -18,13 +18,13 @@ class Knight < Piece
       for add_y in [-1, 1]
         x_now = x_orig + add_x
         y_now = y_orig + add_y
-        crnt_sqr = $board.get_square(x_now, y_now)
+        crnt_sqr = @board.get_square(x_now, y_now)
         if !crnt_sqr
           next
         end
 
         if crnt_sqr.piece
-          if crnt_sqr.piece.owner == $player
+          if crnt_sqr.piece.owner == @owner
             rslt_sqrs << crnt_sqr
           else
             @can_move = TRUE
@@ -41,13 +41,13 @@ class Knight < Piece
       for add_x in [-1, 1]
         x_now = x_orig + add_x
         y_now = y_orig + add_y
-        crnt_sqr = $board.get_square(x_now, y_now)
+        crnt_sqr = @board.get_square(x_now, y_now)
         if !crnt_sqr
           next
         end
 
         if crnt_sqr.piece
-          if crnt_sqr.piece.owner == $player
+          if crnt_sqr.piece.owner == @owner
             rslt_sqrs << crnt_sqr
           else
             @can_move = TRUE

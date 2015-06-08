@@ -2,13 +2,13 @@ require_relative 'board'
 
 class Game
   def initialize
-    $board = Board.new()
-    $board.set_up_pawns()
-    $board.set_up_back_rows()
-    $game_over = false
-    $player = ","
+    @board = Board.new()
+    @board.set_up_pawns()
+    @board.set_up_back_rows()
+    @game_over = false
+    @player = ","
 
-    until $game_over == true
+    until @game_over == true
       self.turn()
     end
   end
@@ -16,9 +16,9 @@ class Game
   attr_accessor :board
 
   def change_player
-    case $player
-    when "," then $player = " "
-    when " " then $player = ","
+    case @player
+    when "," then @player = " "
+    when " " then @player = ","
     end
   end
 
@@ -36,12 +36,12 @@ class Game
   end
 
   def prompt_start_square
-    puts "Player #{$player}, please enter in the square of the piece you want to move (eg, 'e4')..."
+    puts "Player #{@player}, please enter in the square of the piece you want to move (eg, 'e4')..."
     input = gets.chomp
     start_x = self.get_ind_from_ltr(input[0].downcase)
     start_y = input[1].to_i - 1
 
-    start_sqr = $board.get_square(start_x, start_y)
+    start_sqr = @board.get_square(start_x, start_y)
     if !start_sqr
       puts "There is no square #{input}."
       return self.prompt_start_square()
@@ -52,7 +52,7 @@ class Game
     end
 
     start_piece = start_sqr.piece
-    if start_piece.owner != $player
+    if start_piece.owner != @player
       puts "You cannot move your opponent's piece!"
       return self.prompt_start_square()
     end
@@ -78,9 +78,9 @@ class Game
       puts "There is no square #{input}."
       return self.prompt_target_square(moving_piece)
     end
-    target_sqr = $board.get_square(target_x, target_y)
+    target_sqr = @board.get_square(target_x, target_y)
     if target_sqr.piece
-      if target_sqr.piece.owner == $player
+      if target_sqr.piece.owner == @player
         puts "You cannot attack your own piece!"
         return self.prompt_target_square(moving_piece)
       end
@@ -97,7 +97,7 @@ class Game
 
   def turn
     self.change_player()
-    $board.render()
+    @board.render()
 
     start_sqr  = self.prompt_start_square()
     target_sqr = self.prompt_target_square(start_sqr.piece)

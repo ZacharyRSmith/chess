@@ -15,9 +15,9 @@ class Rook < Piece
     for add_x in [-1, 1]
       x_now = x_orig + add_x
       until !x_now.between?(0, 7)
-        crnt_square = $board[x_now][y_orig]
+        crnt_square = @board[x_now][y_orig]
 
-        if crnt_square.has() && crnt_square.has().owner == $player
+        if crnt_square.has() && crnt_square.has().owner == @owner
           break
         end
         rslt_squares << crnt_square
@@ -32,9 +32,9 @@ class Rook < Piece
     for add_y in [-1, 1]
       y_now = y_orig + add_y
       until !y_now.between?(0, 7)
-        crnt_square = $board[x_orig][y_now]
+        crnt_square = @board[x_orig][y_now]
 
-        if crnt_square.has() && crnt_square.has().owner == $player
+        if crnt_square.has() && crnt_square.has().owner == @owner
           break
         end
         rslt_squares << crnt_square
