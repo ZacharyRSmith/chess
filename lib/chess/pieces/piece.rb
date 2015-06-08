@@ -1,5 +1,5 @@
 class Piece
-  def initialize(owner:, square:)
+  def initialize(owner: " ", square:)
     @board     = square.board
     @can_move  = FALSE
     # Every piece should have an @icon, but I am leaving that to child classes.
