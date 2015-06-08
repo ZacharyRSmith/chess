@@ -13,7 +13,7 @@ class TestBishop < MiniTest::Test
 
   def test_icon
     bishop = gen_bishop()
-    assert_equal("A", bishop.icon)
+    assert_equal("B", bishop.icon)
   end
 
   def test_owner_with_comma
