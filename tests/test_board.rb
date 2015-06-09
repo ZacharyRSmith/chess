@@ -3,6 +3,18 @@ require 'minitest/autorun'
 
 
 class TestBoard < MiniTest::Test
+  def test_white_king
+    board = Board.new()
+    assert(board.white_king.is_a? King)
+    assert_equal([4,0], board.white_king.square.coordinates)
+  end
+
+  def test_black_king
+    board = Board.new()
+    assert(board.black_king.is_a? King)
+    assert_equal([4,7], board.black_king.square.coordinates)
+  end
+
   def test_empty_squares
     board = Board.new()
 
@@ -186,12 +198,4 @@ class TestBoard < MiniTest::Test
 
   def test_los_of_pawns
   end
-
-#   def test_in_los_of
-#     board = Board.new()
-#     pawn = board.get_square(0,1).piece
-#     rook = board.get_square(0,0).piece
-
-#     assert(pawn.in_los_of.include? rook)
-#   end
 end
