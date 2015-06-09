@@ -16,28 +16,27 @@ class TestKing < MiniTest::Test
 
   def test_owner_with_white_piece
     board = Board.new()
-    king = board.get_square(4, 0).piece
+    king = board.white_king
 
     assert_equal(" ", king.owner)
   end
 
   def test_owner_with_black_piece
     board = Board.new()
-    king = board.get_square(4, 7).piece
+    king = board.black_king
 
     assert_equal(",", king.owner)
   end
 
   def test_cannot_move_when_blocked_by_friendly_pieces
     board = Board.new()
-    king = board.get_square(4, 0).piece
 
-    refute(king.can_move)
+    refute(board.white_king.can_move)
   end
 
   def test_can_move_when_blocked_by_enemy_pieces
     board = Board.new()
-    king = board.get_square(4, 0).piece
+    king = board.white_king
     sqr = board.get_square(4, 1)
     sqr.piece = Piece.new(owner: ",", square: sqr)
     king.set_los()
