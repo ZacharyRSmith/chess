@@ -7,6 +7,34 @@ class King < Piece
     @icon = "K"
   end
 
+  def is_checked?
+    if self.is_checked_by_bishop? || self.is_checked_by_king? ||
+        self.is_checked_by_knight? || self.is_checked_by_pawn? ||
+        self.is_checked_by_queen? || self.is_checked_by_rook?
+      return TRUE
+    else
+      return FALSE
+    end
+  end
+
+  def is_checked_by_bishop?
+  end
+
+  def is_checked_by_king?
+  end
+
+  def is_checked_by_knight?
+  end
+
+  def is_checked_by_pawn?
+  end
+
+  def is_checked_by_queen?
+  end
+
+  def is_checked_by_rook?
+  end
+
   def set_los
     x_orig = @square.coordinates[0]
     y_orig = @square.coordinates[1]
