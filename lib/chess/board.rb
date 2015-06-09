@@ -59,12 +59,18 @@ class Board
   end
 
   def get_square(x, y)
-#     puts "#{x}, #{y}"
     if !x.between?(0, @squares_ary.size-1) || !y.between?(0, @squares_ary.size-1)
       return nil
     end
 
     @squares_ary[x][y]
+  end
+
+  def get_square_at_relative_coord(sqr, add_x, add_y)
+    orig_x = sqr.coordinates[0]
+    orig_y = sqr.coordinates[1]
+  
+    return self.get_square(orig_x + add_x, orig_y + add_y)
   end
 
   def set_los_of_each_piece
