@@ -3,8 +3,7 @@ require_relative 'board'
 class Game
   def initialize
     @board = Board.new()
-#     @board.set_up_pawns()
-#     @board.set_up_back_rows()
+
     @game_over = false
     @player = " "
   end
@@ -109,15 +108,8 @@ class Game
     target_sqr = self.prompt_target_square(start_sqr.piece)
     self.move_piece(start_sqr.piece, target_sqr)
     # FIXME Check for check/checkmate
-    0.upto(7) do |row|
-      0.upto(7) do |col|
-        piece = @board.get_square(col, row).piece
-        if !piece
-          next
-        end
-        piece.set_los()
-      end
-    end
+
+    @board.set_los_of_each_piece()
     self.change_player()
   end
 
