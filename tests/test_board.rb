@@ -54,4 +54,132 @@ class TestBoard < MiniTest::Test
       end
     end
   end
+
+  def test_los_of_rooks
+    board = Board.new()
+
+    # Bottom-left rook:
+    rook = board.get_square(0, 0).piece
+    actual_coords = []
+
+    rook.los.each do |sqr|
+      actual_coords << sqr.coordinates
+    end
+
+    expected_coords = [[0,1], [1,0]]
+    expected_coords.sort!
+    actual_coords.sort!
+
+    assert_equal(expected_coords, actual_coords)
+
+    # Top-right rook:
+    rook = board.get_square(7, 7).piece
+    actual_coords = []
+
+    rook.los.each do |sqr|
+      actual_coords << sqr.coordinates
+    end
+
+    expected_coords = [[6,7], [7,6]]
+    expected_coords.sort!
+    actual_coords.sort!
+
+    assert_equal(expected_coords, actual_coords)
+
+    # Top-left rook:
+    rook = board.get_square(7, 0).piece
+    actual_coords = []
+
+    rook.los.each do |sqr|
+      actual_coords << sqr.coordinates
+    end
+
+    expected_coords = [[6,0], [7,1]]
+    expected_coords.sort!
+    actual_coords.sort!
+
+    assert_equal(expected_coords, actual_coords)
+
+    # Bottom-right rook
+    rook = board.get_square(0, 7).piece
+    actual_coords = []
+
+    rook.los.each do |sqr|
+      actual_coords << sqr.coordinates
+    end
+
+    expected_coords = [[0,6], [1,7]]
+    expected_coords.sort!
+    actual_coords.sort!
+
+    assert_equal(expected_coords, actual_coords)
+  end
+
+  def test_los_of_knights
+    board = Board.new()
+
+    # Top-right knight
+    knight = board.get_square(6,7).piece
+    actual_coords = []
+
+    knight.los.each do |sqr|
+      actual_coords << sqr.coordinates
+    end
+
+    expected_coords = [[7,5], [5,5], [4,6]]
+    expected_coords.sort!
+    actual_coords.sort!
+
+    assert_equal(expected_coords, actual_coords)
+
+    # Bottom-right knight
+    knight = board.get_square(6,0).piece
+    actual_coords = []
+
+    knight.los.each do |sqr|
+      actual_coords << sqr.coordinates
+    end
+
+    expected_coords = [[7,2], [4,1], [5,2]]
+    expected_coords.sort!
+    actual_coords.sort!
+
+    assert_equal(expected_coords, actual_coords)
+
+    # Bottom-left knight
+    knight = board.get_square(1,0).piece
+    actual_coords = []
+
+    knight.los.each do |sqr|
+      actual_coords << sqr.coordinates
+    end
+
+    expected_coords = [[2,2], [3,1], [0,2]]
+    expected_coords.sort!
+    actual_coords.sort!
+
+    assert_equal(expected_coords, actual_coords)
+
+    # Top-left knight
+    knight = board.get_square(1,7).piece
+    actual_coords = []
+
+    knight.los.each do |sqr|
+      actual_coords << sqr.coordinates
+    end
+
+    expected_coords = [[3,6], [2,5], [0,5]]
+    expected_coords.sort!
+    actual_coords.sort!
+
+    assert_equal(expected_coords, actual_coords)
+  end
+
+#   def test_in_los_of
+#     board = Board.new()
+#     pawn = board.get_square(0,1).piece
+#     rook = board.get_square(0,0).piece
+
+#     assert(pawn.in_los_of.include? rook)
+#   end
 end
