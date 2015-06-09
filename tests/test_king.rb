@@ -1,19 +1,12 @@
+require '_test_helpers'
 require './lib/chess/pieces/king'
 require './lib/chess/pieces/piece'
 require './lib/chess/square'
 require './lib/chess/board'
 require 'minitest/autorun'
 
-def set_up_default_board
-  board = Board.new()
-  board.set_up_pawns()
-  board.set_up_back_rows()
 
-  board
-end
-
-
-class Testking < MiniTest::Test
+class TestKing < MiniTest::Test
   def test_icon
     board = set_up_default_board()
     king = board.get_square(4, 0).piece
