@@ -23,6 +23,14 @@ class King < Piece
           next
         end
 
+        if crnt_sqr.piece
+          if crnt_sqr.piece.owner != @owner
+            @can_move = TRUE
+          end
+        else
+          @can_move = TRUE
+        end
+
         rslt_sqrs << crnt_sqr
       end
     end

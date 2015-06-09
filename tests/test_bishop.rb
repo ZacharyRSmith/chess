@@ -6,6 +6,7 @@ require 'minitest/autorun'
 
 def gen_bishop(coordinates: [0, 0], owner: ",")
   brd = Board.new()
+  brd.clear_off_pieces()
   sqr = brd.get_square(coordinates[0], coordinates[1])
   Bishop.new(square: sqr, owner: owner)
 end
@@ -62,7 +63,6 @@ class TestBishop < MiniTest::Test
 
   def test_set_los_with_blank_board
     bishop = gen_bishop(coordinates: [1,1])
-
     bishop.set_los()
     actual_coords = []
     bishop.los.each { |sqr| actual_coords << sqr.coordinates }

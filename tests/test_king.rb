@@ -1,4 +1,4 @@
-require '_test_helpers'
+require_relative '_test_helpers'
 require './lib/chess/pieces/king'
 require './lib/chess/pieces/piece'
 require './lib/chess/square'
@@ -14,16 +14,16 @@ class TestKing < MiniTest::Test
     assert_equal("K", king.icon)
   end
 
-  def test_owner_with_comma
+  def test_owner_with_white_piece
     board = set_up_default_board()
     king = board.get_square(4, 0).piece
 
     assert_equal(" ", king.owner)
   end
 
-  def test_owner_with_blank
+  def test_owner_with_black_piece
     board = set_up_default_board()
-    king = board.get_square(4, 0).piece
+    king = board.get_square(4, 7).piece
 
     assert_equal(",", king.owner)
   end
@@ -40,6 +40,7 @@ class TestKing < MiniTest::Test
     king = board.get_square(4, 0).piece
     sqr = board.get_square(4, 1)
     sqr.piece = Piece.new(owner: ",", square: sqr)
+    king.set_los()
 
     assert(king.can_move)
   end

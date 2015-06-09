@@ -10,6 +10,10 @@ class Board
     self.set_los_of_default_pieces()
   end
 
+  def clear_off_pieces
+    @squares_ary = self.gen_sqrs_ary()
+  end
+
   def gen_sqrs_ary
     sqrs_ary = []
 
