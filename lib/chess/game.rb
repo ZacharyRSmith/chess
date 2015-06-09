@@ -3,8 +3,8 @@ require_relative 'board'
 class Game
   def initialize
     @board = Board.new()
-    @board.set_up_pawns()
-    @board.set_up_back_rows()
+#     @board.set_up_pawns()
+#     @board.set_up_back_rows()
     @game_over = false
     @player = " "
   end

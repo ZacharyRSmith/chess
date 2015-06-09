@@ -4,6 +4,10 @@ require_relative 'square'
 class Board
   def initialize
     @squares_ary = self.gen_sqrs_ary()
+
+    self.set_up_pawns()
+    self.set_up_back_rows()
+    self.set_los_of_default_pieces()
   end
 
   def gen_sqrs_ary
@@ -44,6 +48,19 @@ class Board
     end
 
     @squares_ary[x][y]
+  end
+
+  def set_los_of_default_pieces
+    rows = [0, 1, 6, 7]
+    cols = 0..7
+
+    rows.each do |row|
+      cols.each do |col|
+        piece = self.get_square(col, row).piece
+
+        piece.set_los()
+      end
+    end
   end
 
   def set_up_back_rows
