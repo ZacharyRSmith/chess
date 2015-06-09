@@ -13,7 +13,7 @@ class TestBoard < MiniTest::Test
     end
   end
 
-  def test_pawns
+  def test_presence_of_pawns
     board = Board.new()
 
     [1, 6].each do |row|
@@ -24,7 +24,7 @@ class TestBoard < MiniTest::Test
     end
   end
 
-  def test_back_rows
+  def test_presence_of_pieces_on_back_rows
     board = Board.new()
 
     [0, 7].each do |row|
@@ -173,6 +173,18 @@ class TestBoard < MiniTest::Test
     actual_coords.sort!
 
     assert_equal(expected_coords, actual_coords)
+  end
+
+  def test_los_of_bishops
+  end
+
+  def test_los_of_queens
+  end
+
+  def test_los_of_kings
+  end
+
+  def test_los_of_pawns
   end
 
 #   def test_in_los_of
