@@ -67,11 +67,6 @@ class Game
     end
     # FIXME Guard against self-check
 
-    
-    start_piece.los.each do |sqr|
-      print sqr.coordinates, "\n"
-    end
-    
     puts "You selected square: #{input}."
     start_sqr
   end
@@ -81,18 +76,23 @@ class Game
     input = gets.chomp
     target_x = self.get_ind_from_ltr(input[0].downcase)
     target_y = input[1].to_i - 1
-    if !target_x.between?(0, 7) || !target_y.between?(0, 7)
+    target_sqr = @board.get_square(target_x, target_y)
+    if !target_sqr
       puts "There is no square #{input}."
       return self.prompt_target_square(moving_piece)
     end
-    target_sqr = @board.get_square(target_x, target_y)
-    if target_sqr.piece
-      if target_sqr.piece.owner == @player
-        puts "You cannot attack your own piece!"
+    if moving_piece.is_a? Pawn
+      if target_sqr.piece &&
+              target_sqr.coordinates[0] == moving_piece.square.coordinates[0]
+        puts "You cannot attack forward with a pawn, only diagonally."
         return self.prompt_target_square(moving_piece)
       end
     end
-    if !moving_piece.los.include?(target_sqr)
+    if target_sqr.piece && target_sqr.piece.owner == @player
+      puts "You cannot attack your own piece!"
+      return self.prompt_target_square(moving_piece)
+    end
+    if !moving_piece.los.include? target_sqr
       puts "Error: Your piece cannot maneuver in that way!"
       return self.prompt_target_square(moving_piece)
     end
@@ -107,24 +107,26 @@ class Game
 
     start_sqr  = self.prompt_start_square()
     target_sqr = self.prompt_target_square(start_sqr.piece)
-    self.move_piece(start_sqr, start_sqr.piece, target_sqr)
+    self.move_piece(start_sqr.piece, target_sqr)
     # FIXME Check for check/checkmate
     self.change_player()
   end
 
-  def move_piece(start_sqr, piece, tar_squ)
-    piece.square    = tar_squ
-    start_sqr.piece = nil
-    tar_squ.piece   = piece
-    piece.moved     = true
+  def move_piece(piece, target_sqr)
+    start_sqr = piece.square
+
+    piece.square     = target_sqr
+    start_sqr.piece  = nil
+    target_sqr.piece = piece
+    piece.moved      = true
   end
 
   def game_over
   end
 
-  def save
+  def save_game
   end
 
-  def load
+  def load_game
   end
 end
