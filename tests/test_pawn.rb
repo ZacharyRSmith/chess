@@ -4,7 +4,7 @@ require './lib/chess/square'
 require './lib/chess/board'
 require 'minitest/autorun'
 
-def gen_pawn(coordinates: [0,1], owner: ",")
+def gen_pawn(coordinates: [0,1], owner: " ")
   brd = Board.new()
   sqr = brd.get_square(coordinates[0], coordinates[1])
   pawn = Pawn.new(square: sqr, owner: owner)
@@ -23,13 +23,13 @@ class TestPawn < MiniTest::Test
   def test_owner_with_comma
     pawn = gen_pawn(owner: ",")
     assert_equal(",", pawn.owner)
-    assert_equal(1,   pawn.direction)
+    assert_equal(-1,   pawn.direction)
   end
 
   def test_owner_with_blank
     pawn = gen_pawn(owner: " ")
     assert_equal(" ", pawn.owner)
-    assert_equal(-1,  pawn.direction)
+    assert_equal(1,  pawn.direction)
   end
 
   def test_pawn_cannot_move_with_piece_right_in_front
@@ -43,18 +43,36 @@ class TestPawn < MiniTest::Test
   end
 
   def test_pawn_can_move_with_no_piece_right_in_front
-    pawn = gen_pawn(coordinates: [0,1])
+    pawn = gen_pawn()
     pawn.set_los()
 
     assert(pawn.can_move)
   end
 
   def test_unmoved_pawn_can_move_two
-    pawn = gen_pawn()
+    pawn = gen_pawn(coordinates: [0, 1])
+    pawn.set_los()
 
+    coords = []
+    pawn.los.each do |sqr|
+      coords << sqr.coordinates
+    end
+
+    assert_includes(coords, [0, 3])
   end
 
   def test_moved_pawn_cannot_move_two
+    pawn = gen_pawn(coordinates: [0, 1])
+
+    pawn.moved = TRUE
+    pawn.set_los()
+
+    coords = []
+    pawn.los.each do |sqr|
+      coords << sqr.coordinates
+    end
+
+    refute_includes(coords, [0, 3])
   end
 
   def test_en_passant

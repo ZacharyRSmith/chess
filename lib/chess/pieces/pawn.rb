@@ -12,11 +12,9 @@ class Pawn < Piece
   attr_reader :direction
 
   def set_direction
-    # direction determines how this pawn can move.
-    if @owner == " "
-      return -1
-    else # @owner == ","
-      return 1
+    case @owner
+    when " " then return 1
+    when "," then return -1
     end
   end
 
