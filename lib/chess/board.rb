@@ -3,12 +3,25 @@ require_relative 'square'
 
 class Board
   def initialize
+#     @pieces = []
     @squares_ary = self.gen_sqrs_ary()
+
+    sqr = self.get_square(4, 0)
+    @white_king = King.new(owner: " ", square: sqr)
+#     @pieces << @white_king
+    sqr.piece = @white_king
+
+    sqr = self.get_square(4, 7)
+    @black_king = King.new(owner: ",", square: sqr)
+#     @pieces << @black_king
+    sqr.piece = @black_king
 
     self.set_up_pawns()
     self.set_up_back_rows()
-    self.set_los_of_default_pieces()
+    self.set_los_of_each_piece()
   end
+
+  attr_reader :black_king, :white_king
 
   def clear_off_pieces
     @squares_ary = self.gen_sqrs_ary()
@@ -54,18 +67,28 @@ class Board
     @squares_ary[x][y]
   end
 
-  def set_los_of_default_pieces
-    rows = [0, 1, 6, 7]
-    cols = 0..7
-
-    rows.each do |row|
-      cols.each do |col|
-        piece = self.get_square(col, row).piece
-
-        piece.set_los()
+  def set_los_of_each_piece
+    @squares_ary.each do |col|
+      col.each do |sqr|
+        if sqr.piece
+          sqr.piece.set_los()
+        end
       end
     end
   end
+
+#   def set_los_of_default_pieces
+#     rows = [0, 1, 6, 7]
+#     cols = 0..7
+
+#     rows.each do |row|
+#       cols.each do |col|
+#         piece = self.get_square(col, row).piece
+
+#         piece.set_los()
+#       end
+#     end
+#   end
 
   def set_up_back_rows
     for owner in [" ", ","]
@@ -76,21 +99,18 @@ class Board
 
       for col in 0..7
         case col
-        when 0, 7
-          then sqr = self.get_square(col, row)
-            sqr.piece = Rook.new(owner: owner, square: sqr)
-        when 1, 6
-          then sqr = self.get_square(col, row)
-                sqr.piece = Knight.new(owner: owner, square: sqr)
-        when 2, 5
-          then sqr = self.get_square(col, row)
-            sqr.piece = Bishop.new(owner: owner, square: sqr)
-        when 3
-          then sqr = self.get_square(col, row)
-            sqr.piece = Queen.new(owner: owner, square: sqr)
-        when 4
-          then sqr = self.get_square(col, row)
-            sqr.piece = King.new(owner: owner, square: sqr)
+        when 0, 7 then
+          sqr = self.get_square(col, row)
+          sqr.piece = Rook.new(owner: owner, square: sqr)
+        when 1, 6 then
+          sqr = self.get_square(col, row)
+          sqr.piece = Knight.new(owner: owner, square: sqr)
+        when 2, 5 then
+          sqr = self.get_square(col, row)
+          sqr.piece = Bishop.new(owner: owner, square: sqr)
+        when 3 then
+          sqr = self.get_square(col, row)
+          sqr.piece = Queen.new(owner: owner, square: sqr)
         end
       end
     end
