@@ -7,29 +7,26 @@ class King < Piece
     @icon = "K"
   end
 
-  def los
-    x_orig = @square.coor[0]
-    y_orig = @square.coor[1]
-    result_coor = []
+  def set_los
+    x_orig = @square.coordinates[0]
+    y_orig = @square.coordinates[1]
+    rslt_sqrs = []
+    @can_move = FALSE
 
-    arr = [-1, 0, 1]
-
-    for add_x in arr
-      for add_y in arr
+    for add_x in [-1, 0, 1]
+      for add_y in [-1, 0, 1]
         x_now = x_orig + add_x
         y_now = y_orig + add_y
 
-        if x_now.between?(0, 7) && y_now.between?(0, 7)
-          result_coor << [x_now, y_now]
+        crnt_sqr = @board.get_square(x_now, y_now)
+        if !crnt_sqr
+          next
         end
+
+        rslt_sqrs << crnt_sqr
       end
     end
 
-    rslt = []
-    for coor in result_coor
-      rslt << @board[coor[0]][coor[1]]
-    end
-
-    rslt
+    @los = rslt_sqrs
   end
 end
