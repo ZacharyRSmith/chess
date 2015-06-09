@@ -44,6 +44,12 @@ class TestKing < MiniTest::Test
     assert(king.can_move)
   end
 
+  def test_is_not_checked_at_start
+    board = Board.new()
+    
+    refute(board.white_king.is_checked?())
+  end
+
   def test_is_checked_by_bishop
     board = Board.new()
 
@@ -54,5 +60,28 @@ class TestKing < MiniTest::Test
     sqr.piece = Bishop.new(owner: ",", square: sqr)
 
     assert(board.white_king.is_checked?())
+  end
+  
+  def test_is_checked_by_king?
+    board = Board.new()
+    
+    # Remove pawn so king can attack white king
+    sqr_in_front = board.get_square(4, 1)
+    sqr_in_front.piece = nil
+    sqr_in_front.piece = King.new(owner: ",", square: sqr_in_front)
+
+    assert(board.white_king.is_checked?())
+  end
+
+  def test_is_checked_by_knight?
+  end
+
+  def test_is_checked_by_pawn?
+  end
+
+  def test_is_checked_by_queen?
+  end
+
+  def test_is_checked_by_rook?
   end
 end
