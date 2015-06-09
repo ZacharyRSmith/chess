@@ -11,36 +11,36 @@ class Queen < Piece
   end
 
   def build_bishop_los()
-    x_orig = @square.coor[0]
-    y_orig = @square.coor[1]
-    rslt_squares = []
+    x_orig = @square.coordinates[0]
+    y_orig = @square.coordinates[1]
+    rslt_sqrs = []
 
     for add_x in [-1, 1]
       for add_y in [-1, 1]
         x_now = x_orig + add_x
         y_now = y_orig + add_y
 
-        until !x_now.between?(0, 7) || !y_now.between?(0, 7)
-          crnt_square = @board[x_now][y_now]
-
-          if crnt_square.has() && crnt_square.has().owner == @owner
-            rslt_squares << crnt_square
+        crnt_sqr = @board.get_square(x_now, y_now)
+        until !crnt_sqr
+          if crnt_sqr.piece && crnt_sqr.piece.owner == @owner
+            rslt_sqrs << crnt_sqr
             break
-          elsif crnt_square.has()
-            rslt_squares << crnt_square
+          elsif crnt_sqr.piece
             @can_move = TRUE
+            rslt_sqrs << crnt_sqr
             break
           else
-            rslt_squares << crnt_square
             @can_move = TRUE
+            rslt_sqrs << crnt_sqr
           end
           x_now = x_now + add_x
           y_now = y_now + add_y
+          crnt_sqr = @board.get_square(x_now, y_now)
         end
       end
     end
 
-    rslt_squares
+    rslt_sqrs
   end
 
   def build_rook_los
