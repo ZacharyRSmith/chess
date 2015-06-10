@@ -30,9 +30,16 @@ class King < Piece
         crnt_sqr = @board.get_square(x_now, y_now)
 
         until !crnt_sqr
+          if crnt_sqr.piece && crnt_sqr.piece.owner == @owner
+            break
+          end
+          
           if crnt_sqr.piece && crnt_sqr.piece.owner != @owner &&
              (crnt_sqr.piece.is_a?(Bishop) || crnt_sqr.piece.is_a?(Queen))
-            return TRUE
+            
+            #puts crnt_sqr.get_notation()
+            
+            return true
           end
           x_now += add_x
           y_now += add_y
@@ -41,7 +48,7 @@ class King < Piece
       end
     end
     
-    return FALSE
+    return false
   end
 
   def is_checked_by_king?
@@ -136,71 +143,75 @@ class King < Piece
 
     for add_x in [-1, 1]
       x_now = x_orig + add_x
-      crnt_square = @board.get_square(x_now, y_orig)
+      crnt_sqr = @board.get_square(x_now, y_orig)
 
-      until !crnt_square
+      until !crnt_sqr
 
-        if crnt_square.piece && crnt_square.piece.owner != @owner &&
-           (crnt_square.piece.is_a?(Rook) || crnt_square.piece.is_a?(Queen))
+        if crnt_sqr.piece && crnt_sqr.piece.owner == @owner
+          break
+        end
+        
+        if crnt_sqr.piece && crnt_sqr.piece.owner != @owner &&
+           (crnt_sqr.piece.is_a?(Rook) || crnt_sqr.piece.is_a?(Queen))
           return TRUE
         end
 
         x_now += add_x
-        crnt_square = @board.get_square(x_now, y_orig)
+        crnt_sqr = @board.get_square(x_now, y_orig)
       end
     end
 
     for add_y in [-1, 1]
       y_now = y_orig + add_y
 
-      crnt_square = @board.get_square(x_orig, y_now)
-      until !crnt_square
-
-        if crnt_square.piece && crnt_square.piece.owner != @owner &&
-           (crnt_square.piece.is_a?(Rook) || crnt_square.piece.is_a?(Queen))
+      crnt_sqr = @board.get_square(x_orig, y_now)
+      until !crnt_sqr
+      
+        if crnt_sqr.piece && crnt_sqr.piece.owner == @owner
+          break
+        end
+          
+        if crnt_sqr.piece && crnt_sqr.piece.owner != @owner &&
+           (crnt_sqr.piece.is_a?(Rook) || crnt_sqr.piece.is_a?(Queen))
           return TRUE
         end
 
         y_now += add_y
-        crnt_square = @board.get_square(x_orig, y_now)
+        crnt_sqr = @board.get_square(x_orig, y_now)
       end
     end
     
     return FALSE
   end
 
-  def set_los
+  def get_moves
+    rslt_sqrs = []
     x_orig = @square.coordinates[0]
     y_orig = @square.coordinates[1]
-    rslt_sqrs = []
-    @can_move = FALSE
 
     for add_x in [-1, 0, 1]
       for add_y in [-1, 0, 1]
         if add_x == 0 && add_y == 0
           next
         end
-
         x_now = x_orig + add_x
         y_now = y_orig + add_y
-
         crnt_sqr = @board.get_square(x_now, y_now)
+
         if !crnt_sqr
           next
         end
 
         if crnt_sqr.piece
           if crnt_sqr.piece.owner != @owner
-            @can_move = TRUE
+            rslt_sqrs << crnt_sqr
           end
         else
-          @can_move = TRUE
+          rslt_sqrs << crnt_sqr
         end
-
-        rslt_sqrs << crnt_sqr
       end
     end
 
-    @los = rslt_sqrs
+    rslt_sqrs
   end
 end

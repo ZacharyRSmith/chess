@@ -50,15 +50,11 @@ class TestPawn < MiniTest::Test
   end
 
   def test_unmoved_pawn_can_move_two
-    pawn = gen_pawn(coordinates: [0, 1])
-    pawn.set_los()
+    board = Board.new()
+    pawn = board.get_square('e2').piece
+    sqr_two_in_front = board.get_square('e4')
 
-    coords = []
-    pawn.los.each do |sqr|
-      coords << sqr.coordinates
-    end
-
-    assert_includes(coords, [0, 3])
+    assert(pawn.los.include?(sqr_two_in_front))
   end
 
   def test_moved_pawn_cannot_move_two
@@ -76,9 +72,6 @@ class TestPawn < MiniTest::Test
   end
 
   def test_en_passant
-  end
-
-  def test_promotion
   end
 
   def test_can_attack_enemy

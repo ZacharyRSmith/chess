@@ -7,56 +7,54 @@ class Rook < Piece
     @icon = "R"
   end
 
-  def set_los
+  def get_moves
+    rslt_sqrs = []
     x_orig = @square.coordinates[0]
     y_orig = @square.coordinates[1]
-    rslt_squares = []
-    @can_move = FALSE
 
     for add_x in [-1, 1]
       x_now = x_orig + add_x
+      crnt_sqr = @board.get_square(x_now, y_orig)
 
-      crnt_square = @board.get_square(x_now, y_orig)
-      until !crnt_square
+      until !crnt_sqr
 
-        if crnt_square.piece && crnt_square.piece.owner == @owner
-          rslt_squares << crnt_square
-          break
-        elsif crnt_square.piece
-          @can_move = TRUE
-          rslt_squares << crnt_square
+        if crnt_sqr.piece
+          if crnt_sqr.piece.owner == @owner
+            break
+          end
+
+          rslt_sqrs << crnt_sqr if self.move_leaves_self_unchecked?(crnt_sqr)
           break
         else
-          @can_move = TRUE
-          rslt_squares << crnt_square
+
+          rslt_sqrs << crnt_sqr if self.move_leaves_self_unchecked?(crnt_sqr)
         end
         x_now += add_x
-        crnt_square = @board.get_square(x_now, y_orig)
+        crnt_sqr = @board.get_square(x_now, y_orig)
       end
     end
 
     for add_y in [-1, 1]
       y_now = y_orig + add_y
+      crnt_sqr = @board.get_square(x_orig, y_now)
 
-      crnt_square = @board.get_square(x_orig, y_now)
-      until !crnt_square
+      until !crnt_sqr
 
-        if crnt_square.piece && crnt_square.piece.owner == @owner
-          rslt_squares << crnt_square
-          break
-        elsif crnt_square.piece
-          @can_move = TRUE
-          rslt_squares << crnt_square
+        if crnt_sqr.piece
+          if crnt_sqr.piece.owner == @owner
+            break
+          end
+
+          rslt_sqrs << crnt_sqr if self.move_leaves_self_unchecked?(crnt_sqr)
           break
         else
-          @can_move = TRUE
-          rslt_squares << crnt_square
+          rslt_sqrs << crnt_sqr if self.move_leaves_self_unchecked?(crnt_sqr)
         end
         y_now += add_y
-        crnt_square = @board.get_square(x_orig, y_now)
+        crnt_sqr = @board.get_square(x_orig, y_now)
       end
     end
 
-    @los = rslt_squares
+    rslt_sqrs
   end
 end

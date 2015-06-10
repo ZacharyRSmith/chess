@@ -1,4 +1,5 @@
 require_relative 'board'
+require_relative '_helpers'
 
 class Game
   def initialize
@@ -8,7 +9,7 @@ class Game
     @player = " "
   end
 
-  attr_accessor :board
+  attr_reader :board
 
   def change_player
     case @player
@@ -23,42 +24,47 @@ class Game
     end
   end
 
-  def get_ind_from_ltr(ltr)
-    case ltr
-    when "a" then return 0
-    when "b" then return 1
-    when "c" then return 2
-    when "d" then return 3
-    when "e" then return 4
-    when "f" then return 5
-    when "g" then return 6
-    when "h" then return 7
+  def get_promotion_type(input)
+    case input
+    when 'Q' then
+    when 'R' then
+    when 'N' then
+    when 'B' then
     end
+  end
+  
+  def prompt_promotion
+    puts "W@@T!! A PROMOTION!! Enter in your pawn's new type! (Ie: 'Q', 'R', 'N', or 'B')"
+    input = gets.chomp.upcase!
+    if !['Q', 'R', 'N', 'B'].include?(input)
+      puts "Sorry, I didn't understand that input."
+      return self.prompt_promotion()
+    end
+
+    input
   end
 
   def prompt_start_square
     puts "Player #{@player}, please enter in the square of the piece you want to move (eg, 'e4')..."
     input = gets.chomp
-    start_x = self.get_ind_from_ltr(input[0].downcase)
-    start_y = input[1].to_i - 1
 
-    start_sqr = @board.get_square(start_x, start_y)
+    start_sqr = @board.get_square_with_chess_notation(input)
     if !start_sqr
       puts "There is no square #{input}."
       return self.prompt_start_square()
     end
-    if !start_sqr.piece
+
+    start_piece = start_sqr.piece
+    if !start_piece
       puts "There is no piece at square #{input}!"
       return self.prompt_start_square()
     end
-
-    start_piece = start_sqr.piece
     if start_piece.owner != @player
       puts "You cannot move your opponent's piece!"
       return self.prompt_start_square()
     end
 
-    # FIXME Should not have to get/set los
+    # FIXME Should not have to get/set los?
     start_piece.set_los()
     if !start_piece.can_move
       puts "This piece cannot move!"
@@ -73,9 +79,8 @@ class Game
   def prompt_target_square(moving_piece)
     puts "Now please enter in the square to where you want to move..."
     input = gets.chomp
-    target_x = self.get_ind_from_ltr(input[0].downcase)
-    target_y = input[1].to_i - 1
-    target_sqr = @board.get_square(target_x, target_y)
+
+    target_sqr = @board.get_square_with_chess_notation(input)
     if !target_sqr
       puts "There is no square #{input}."
       return self.prompt_target_square(moving_piece)
@@ -104,25 +109,31 @@ class Game
   def turn
     @board.render()
 
-    start_sqr  = self.prompt_start_square()
-    target_sqr = self.prompt_target_square(start_sqr.piece)
-    self.move_piece(start_sqr.piece, target_sqr)
-    # FIXME Check for check/checkmate
+    piece      = self.prompt_start_square().piece
+    target_sqr = self.prompt_target_square(piece)
 
-    @board.set_los_of_each_piece()
+    if @board.move_promotes_pawn?(piece, target_sqr)
+      promotion = self.prompt_promotion()
+      @board.promote_pawn(piece, target_sqr, promotion)
+    else
+      @board.move_piece(piece, target_sqr)
+    end
+
     self.change_player()
+    if @board.is_checked?(@player)
+      if @board.can_uncheck?(@player)
+        puts "Player #{@player}, you are checked."
+      else
+        self.end_game()
+      end
+    end
   end
 
-  def move_piece(piece, target_sqr)
-    start_sqr = piece.square
-
-    piece.square     = target_sqr
-    start_sqr.piece  = nil
-    target_sqr.piece = piece
-    piece.moved      = true
-  end
-
-  def game_over
+  def end_game
+    @game_over = true
+    @board.render()
+    
+    puts "Game over."
   end
 
   def save_game

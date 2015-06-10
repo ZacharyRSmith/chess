@@ -27,4 +27,22 @@ class TestRook < MiniTest::Test
     rook = gen_rook(owner: " ")
     assert_equal(" ", rook.owner)
   end
+
+ def test_moves_limited_if_need_to_block_check
+    board = Board.new()
+    
+    # Remove pawn so enemy bishop can attack king
+    sqr_d2 = board.get_square('d2')
+    sqr_d2.piece = nil
+    
+    sqr = board.get_square('c3')
+    sqr.piece = Bishop.new(owner: ",", square: sqr)
+    
+    sqr = board.get_square('d1')
+    rook = Rook.new(owner: " ", square: sqr)
+    sqr.piece = rook
+    rook.set_los()
+    
+    assert_equal([sqr_d2], rook.los)
+  end
 end

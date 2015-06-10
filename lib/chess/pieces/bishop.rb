@@ -6,12 +6,28 @@ class Bishop < Piece
     super(owner: owner, square: square)
     @icon = "B"
   end
-
-  def set_los
+  
+  def is_blocking_self_from_check?
+    case @owner
+    when " " then king = @board.white_king
+    when "," then king = @board.black_king
+    end
+    
+    @square.piece = nil
+    
+    if king.is_checked?
+      @square.piece = self
+      return true
+    else
+      @square.piece = self
+      return false
+    end
+  end
+  
+  def get_moves
+    rslt_sqrs = []    
     x_orig = @square.coordinates[0]
     y_orig = @square.coordinates[1]
-    rslt_sqrs = []
-    @can_move = FALSE
 
     for add_x in [-1, 1]
       for add_y in [-1, 1]
@@ -20,28 +36,23 @@ class Bishop < Piece
         crnt_sqr = @board.get_square(x_now, y_now)
 
         until !crnt_sqr
-          if crnt_sqr.piece && crnt_sqr.piece.owner == @owner
-            rslt_sqrs << crnt_sqr
-            break
-          elsif crnt_sqr.piece
-            @can_move = TRUE
-            rslt_sqrs << crnt_sqr
+          if crnt_sqr.piece
+            if crnt_sqr.piece.owner == @owner
+              break
+            end
+            
+            rslt_sqrs << crnt_sqr if self.move_leaves_self_unchecked?(crnt_sqr)
             break
           else
-            @can_move = TRUE
-            rslt_sqrs << crnt_sqr
+            rslt_sqrs << crnt_sqr if self.move_leaves_self_unchecked?(crnt_sqr)
           end
-          x_now = x_now + add_x
-          y_now = y_now + add_y
-      
-#       print x_now, y_now, "\n"
-#       print @board.get_square(7, 7).piece
-      
+          x_now += add_x
+          y_now += add_y
           crnt_sqr = @board.get_square(x_now, y_now)
         end
       end
     end
-
-    @los = rslt_sqrs
+    
+    rslt_sqrs
   end
 end

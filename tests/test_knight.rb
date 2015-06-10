@@ -3,6 +3,7 @@ require './lib/chess/pieces/piece'
 require './lib/chess/square'
 require './lib/chess/board'
 require 'minitest/autorun'
+require_relative '_test_helpers'
 
 
 class TestKnight < MiniTest::Test
@@ -29,18 +30,15 @@ class TestKnight < MiniTest::Test
 
   def test_los_with_default_board
     board = Board.new()
-    knight = board.get_square(1, 0).piece
+    knight = board.get_square('b1').piece
+    actual_sqrs = []
 
-    actual_los_coords = []
     knight.los.each do |sqr|
-      actual_los_coords << sqr.coordinates
+      actual_sqrs << sqr.get_notation()
     end
 
-    expected_los_coords = [[2,2], [0,2], [3,1]]
+    expected_sqrs = ['a3', 'c3']
 
-    actual_los_coords.sort!
-    expected_los_coords.sort!
-
-    assert_equal(expected_los_coords, actual_los_coords)
+    assert_equal_after_sorting(expected_sqrs, actual_sqrs)
   end
 end

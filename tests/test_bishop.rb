@@ -3,6 +3,7 @@ require './lib/chess/pieces/piece'
 require './lib/chess/square'
 require './lib/chess/board'
 require 'minitest/autorun'
+require_relative '_test_helpers'
 
 def gen_bishop(coordinates: [0, 0], owner: ",")
   brd = Board.new()
@@ -36,13 +37,9 @@ class TestBishop < MiniTest::Test
     sqr.piece = Piece.new(owner: " ", square: sqr)
 
     bishop.set_los()
-    actual_coords = []
-    bishop.los.each { |sqr| actual_coords << sqr.coordinates }
 
-    expected_coords = [[1,1]]
-
-    assert_equal(expected_coords, actual_coords)
-    assert_equal(FALSE, bishop.can_move)
+    assert_empty(bishop.los)
+    refute(bishop.can_move)
   end
 
   def test_set_los_where_can_move_should_be_true
@@ -71,10 +68,8 @@ class TestBishop < MiniTest::Test
                        [2,2], [3,3], [4,4], [5,5], [6,6], [7,7], # Top-right
                        [0,2], # Top-left diagonal
                        [2,0]] # Bottom-right
-    actual_coords.sort!
-    expected_coords.sort!
 
-    assert_equal(expected_coords, actual_coords)
+    assert_equal_after_sorting(expected_coords, actual_coords)
   end
 
   def test_set_los_with_pieces_blocking_bishop
@@ -98,13 +93,45 @@ class TestBishop < MiniTest::Test
     sqr.piece = Piece.new(owner: " ", square: sqr)
 
     bishop.set_los()
-    actual_coords = []
-    bishop.los.each { |sqr| actual_coords << sqr.coordinates }
+    
+    assert_empty(bishop.los)
+  end
 
-    expected_coords = [[4,4], [4,2], [2,2], [2,4]]
-    actual_coords.sort!
-    expected_coords.sort!
+  def test_cannot_move_if_pinned
+    board = Board.new()
+    sqr = board.get_square(4, 1)
+    bishop = Bishop.new(owner: " ", square: sqr)
+    sqr.piece = bishop
 
-    assert_equal(expected_coords, actual_coords)
+    # This enemy rook would check king if bishop moved
+    sqr = board.get_square(4, 2)
+    sqr.piece = Rook.new(owner: ",", square: sqr)
+
+    bishop.set_los()
+    
+    refute(bishop.can_move)
+  end
+  
+  def test_moves_are_limited_if_needs_to_maintain_check_block
+    board = Board.new()
+    sqr = board.get_square('f2')
+    bishop = Bishop.new(owner: " ", square: sqr)
+    sqr.piece = bishop
+
+    # This enemy queen would check king if bishop moved other than g3/h4
+    sqr = board.get_square('h4')
+    sqr.piece = Queen.new(owner: ",", square: sqr)
+
+    bishop.set_los()
+    actual_sqrs = []
+    
+    bishop.los.each do |sqr|
+      actual_sqrs << sqr.get_notation()
+    end
+    
+    expected_sqrs = ['g3', 'h4']
+
+    assert(bishop.can_move)
+    assert_equal_after_sorting(expected_sqrs, actual_sqrs)
   end
 end

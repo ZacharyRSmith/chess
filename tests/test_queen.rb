@@ -27,4 +27,20 @@ class TestQueen < MiniTest::Test
     queen = gen_queen(owner: " ")
     assert_equal(" ", queen.owner)
   end
+
+  def test_moves_limited_if_need_to_block_check
+    board = Board.new()
+    
+    # Remove pawn so enemy bishop can attack king
+    sqr_d2 = board.get_square('d2')
+    sqr_d2.piece = nil
+    
+    sqr = board.get_square('c3')
+    sqr.piece = Bishop.new(owner: ",", square: sqr)
+    
+    queen = board.get_square('d1').piece
+    queen.set_los()
+    
+    assert_equal([sqr_d2], queen.los)
+  end
 end

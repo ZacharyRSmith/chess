@@ -1,7 +1,6 @@
-def set_up_default_board
-  board = Board.new()
-  board.set_up_pawns()
-  board.set_up_back_rows()
-
-  board
+def assert_equal_after_sorting(expected, actual)
+  expected.sort!
+  actual.sort!
+  
+  assert_equal(expected, actual)
 end

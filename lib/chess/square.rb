@@ -1,3 +1,6 @@
+require_relative '_helpers'
+
+
 class Square
   def initialize(board:, coordinates:, piece: nil)
     @board       = board
@@ -5,13 +8,16 @@ class Square
     @piece       = piece
   end
 
-  attr_accessor :coordinates, :piece
-  attr_reader   :board
+  attr_accessor :piece
+  attr_reader   :board, :coordinates
 
-#   def piece=(piece)
-#     @piece = piece
-#   end
+  def get_notation
+    file = get_chess_file_from_x_coord(@coordinates[0])
+    rank = get_chess_rank_from_y_coord(@coordinates[1])
 
+    file + rank
+  end
+  
   def show
     if !@piece
       "   "

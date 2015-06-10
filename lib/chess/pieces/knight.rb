@@ -7,12 +7,10 @@ class Knight < Piece
     @icon = "N"
   end
 
-  def set_los
-    coordinates = @square.coordinates
-    x_orig = coordinates[0]
-    y_orig = coordinates[1]
+  def get_moves
+    x_orig = @square.coordinates[0]
+    y_orig = @square.coordinates[1]
     rslt_sqrs = []
-    @can_move = FALSE
 
     for add_x in [-2, 2]
       for add_y in [-1, 1]
@@ -25,14 +23,12 @@ class Knight < Piece
 
         if crnt_sqr.piece
           if crnt_sqr.piece.owner == @owner
-            rslt_sqrs << crnt_sqr
-          else
-            @can_move = TRUE
-            rslt_sqrs << crnt_sqr
+            next
           end
+          
+          rslt_sqrs << crnt_sqr if self.move_leaves_self_unchecked?(crnt_sqr)
         else
-          rslt_sqrs << crnt_sqr
-          @can_move = TRUE
+          rslt_sqrs << crnt_sqr if self.move_leaves_self_unchecked?(crnt_sqr)
         end
       end
     end
@@ -48,18 +44,16 @@ class Knight < Piece
 
         if crnt_sqr.piece
           if crnt_sqr.piece.owner == @owner
-            rslt_sqrs << crnt_sqr
-          else
-            @can_move = TRUE
-            rslt_sqrs << crnt_sqr
+            next
           end
+
+          rslt_sqrs << crnt_sqr if self.move_leaves_self_unchecked?(crnt_sqr)
         else
-          @can_move = TRUE
-          rslt_sqrs << crnt_sqr
+          rslt_sqrs << crnt_sqr if self.move_leaves_self_unchecked?(crnt_sqr)
         end
       end
     end
 
-    @los = rslt_sqrs
+    rslt_sqrs
   end
 end
