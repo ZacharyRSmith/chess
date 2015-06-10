@@ -41,4 +41,20 @@ class TestKnight < MiniTest::Test
 
     assert_equal_after_sorting(expected_sqrs, actual_sqrs)
   end
+
+  def test_moves_limited_if_need_to_block_check
+    board = Board.new()
+
+    # Remove pawn so queen can attack king
+    sqr_e2 = board.get_square('e2')
+    sqr_e2.piece = nil
+    
+    sqr = board.get_square('e4')
+    sqr.piece = Queen.new(owner: ",", square: sqr)
+    
+    knight = board.get_square('g1').piece
+    knight.set_los()
+    
+    assert_equal([sqr_e2], knight.los)
+  end
 end

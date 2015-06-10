@@ -195,4 +195,19 @@ class TestKing < MiniTest::Test
 
     refute(board.white_king.is_checked?)
   end
+
+  def test_cannot_move_into_check
+    board = Board.new()
+    
+    # Remove pawn so queen can attack square in front of king
+    board.get_square('e2').piece = nil
+    
+    sqr = board.get_square('h5')
+    sqr.piece = Queen.new(owner: ",", square: sqr)
+    
+    king = board.white_king
+    king.set_los()
+    
+    assert_empty(king.los)
+  end
 end

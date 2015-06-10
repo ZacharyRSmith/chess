@@ -79,4 +79,20 @@ class TestPawn < MiniTest::Test
 
   def test_cannot_attack_friend
   end
+  
+  def test_moves_limited_if_need_to_block_check
+    board = Board.new()
+
+    # Remove pawn so queen can attack king
+    sqr_f2 = board.get_square('f2')
+    sqr_f2.piece = nil
+    
+    sqr = board.get_square('h4')
+    sqr.piece = Queen.new(owner: ",", square: sqr)
+    
+    pawn = board.get_square('g2').piece
+    pawn.set_los()
+    
+    assert_equal([board.get_square('g3')], pawn.los)
+  end
 end
