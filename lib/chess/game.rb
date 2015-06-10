@@ -18,6 +18,20 @@ class Game
     end
   end
 
+  def check_status
+    if @board.is_checked?(@player)
+      if @board.can_uncheck?(@player)
+        puts "Player #{@player}, you are checked."
+      else
+        puts "Player #{@player}, you've been checkmated."
+        self.end_game()
+      end
+    elsif !@board.can_move?(@player)
+      puts "Stalemate."
+      self.end_game()
+    end
+  end
+  
   def engine
     until @game_over == TRUE
       self.turn()
@@ -30,6 +44,20 @@ class Game
     when 'R' then
     when 'N' then
     when 'B' then
+    end
+  end
+  
+  def move
+    piece      = self.prompt_start_square().piece
+    target_sqr = self.prompt_target_square(piece)
+
+    if @board.move_promotes_pawn?(piece, target_sqr)
+      promotion = self.prompt_promotion()
+      @board.promote_pawn(piece, target_sqr, promotion)
+    elsif @board.move_is_castling?(piece, target_sqr)
+      @board.castle(piece, target_sqr)
+    else
+      @board.move_piece(piece, target_sqr)
     end
   end
   
@@ -109,30 +137,10 @@ class Game
   def turn
     @board.render()
 
-    piece      = self.prompt_start_square().piece
-    target_sqr = self.prompt_target_square(piece)
-
-    if @board.move_promotes_pawn?(piece, target_sqr)
-      promotion = self.prompt_promotion()
-      @board.promote_pawn(piece, target_sqr, promotion)
-    elsif @board.move_is_castling?(piece, target_sqr)
-      @board.castle(piece, target_sqr)
-    else
-      @board.move_piece(piece, target_sqr)
-    end
+    self.move()
 
     self.change_player()
-    if @board.is_checked?(@player)
-      if @board.can_uncheck?(@player)
-        puts "Player #{@player}, you are checked."
-      else
-        puts "Player #{@player}, you've been checkmated."
-        self.end_game()
-      end
-    elsif !@board.can_move?(@player)
-      puts "Stalemate."
-      self.end_game()
-    end
+    self.check_status()
   end
 
   def end_game
