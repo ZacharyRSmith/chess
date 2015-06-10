@@ -72,12 +72,46 @@ class TestPawn < MiniTest::Test
   end
 
   def test_en_passant
+    board = Board.new()
+    
+    sqr = board.get_square('d4')
+    pawn = Pawn.new(owner: ",", square: sqr)
+    sqr.piece = pawn
+    
+    sneaker = board.get_square('e2').piece
+    board.move_piece(sneaker, board.get_square('e4'))
+    
+    pawn.set_los()
+    
+    assert(pawn.los.include?(board.get_square('e3')))
+    
+    board.move_piece(pawn, board.get_square('e3'))
+    
+    refute(board.get_square('e4').piece)
   end
 
   def test_can_attack_enemy
+    board = Board.new()
+    
+    sqr = board.get_square('d3')
+    sqr.piece = Queen.new(owner: ",", square: sqr)
+
+    pawn = board.get_square('e2').piece
+    pawn.set_los()
+    
+    assert(pawn.los.include?(sqr))
   end
 
   def test_cannot_attack_friend
+    board = Board.new()
+    
+    sqr = board.get_square('d3')
+    sqr.piece = Queen.new(owner: " ", square: sqr)
+
+    pawn = board.get_square('e2').piece
+    pawn.set_los()
+    
+    refute(pawn.los.include?(sqr))
   end
   
   def test_moves_limited_if_need_to_block_check

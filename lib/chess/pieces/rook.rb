@@ -7,6 +7,14 @@ class Rook < Piece
     @icon = "R"
   end
 
+  def can_castle?
+    if @moved
+      return false
+    else
+      return true
+    end
+  end
+
   def get_moves
     rslt_sqrs = []
     x_orig = @square.coordinates[0]

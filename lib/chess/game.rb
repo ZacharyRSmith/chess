@@ -115,6 +115,8 @@ class Game
     if @board.move_promotes_pawn?(piece, target_sqr)
       promotion = self.prompt_promotion()
       @board.promote_pawn(piece, target_sqr, promotion)
+    elsif @board.move_is_castling?(piece, target_sqr)
+      @board.castle(piece, target_sqr)
     else
       @board.move_piece(piece, target_sqr)
     end

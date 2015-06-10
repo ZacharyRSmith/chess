@@ -7,16 +7,11 @@ class Board
   def initialize
     @squares_ary = self.gen_sqrs_ary()
 
-    sqr = self.get_square_with_chess_notation('e1')
-    @white_king = King.new(owner: " ", square: sqr)
-    sqr.piece = @white_king
-
-    sqr = self.get_square_with_chess_notation('e8')
-    @black_king = King.new(owner: ",", square: sqr)
-    sqr.piece = @black_king
-
     self.set_up_pawns()
     self.set_up_back_rows()
+    @black_king            = self.get_square('e8').piece
+    @white_king            = self.get_square('e1').piece
+    
     self.set_los_of_each_piece()
   end
 
@@ -32,6 +27,17 @@ class Board
     end
     
     return false
+  end
+  
+  def castle(king, target_sqr)
+    start_sqr        = king.square
+    king.square      = target_sqr
+    start_sqr.piece  = nil
+    target_sqr.piece = king
+    king.moved       = true
+    
+    rook_hash = self.get_castling_rook_hash(target_sqr)
+    self.move_piece(rook_hash['rook'], rook_hash['sqr'])
   end
   
   def clear_off_pieces
@@ -69,6 +75,29 @@ class Board
     rendered_row_ary
   end
 
+  def get_castling_rook_hash(kings_castling_sqr)
+    rslt = {}
+    
+    case kings_castling_sqr.get_notation()
+    when 'g1' then
+      rslt['rook'] = self.get_square('h1').piece
+      rslt['sqr']  = self.get_square('f1')
+      return rslt
+    when 'c1' then
+      rslt['rook'] = self.get_square('a1').piece
+      rslt['sqr']  = self.get_square('d1')
+      return rslt
+    when 'g8' then
+      rslt['rook'] = self.get_square('h8').piece
+      rslt['sqr']  = self.get_square('f8')
+      return rslt
+    when 'c8' then
+      rslt['rook'] = self.get_square('a8').piece
+      rslt['sqr']  = self.get_square('d8')
+      return rslt
+    end
+  end
+  
   def get_square(arg1, y=nil)
     if arg1.is_a?(String)
       x = get_x_coord_from_chess_file(arg1[0])
@@ -113,6 +142,27 @@ class Board
     end
   end
 
+  def move_is_castling?(piece, target_sqr)
+    if !piece.is_a?(King)
+      return false
+    end
+    if piece.moved
+      return false
+    end
+    
+    castling_sqrs = []
+    castling_sqrs << self.get_square('g1') # White king-side
+    castling_sqrs << self.get_square('c1') # White queen-side
+    castling_sqrs << self.get_square('g8') # Black king-side
+    castling_sqrs << self.get_square('c8') # Black queen-side
+    
+    if castling_sqrs.include?(target_sqr)
+      return true
+    else
+      return false
+    end
+  end
+  
   def move_promotes_pawn?(piece, target_sqr)
     if piece.is_a?(Pawn) && [0, 7].include?(target_sqr.coordinates[1])
       return true
@@ -122,8 +172,7 @@ class Board
   end
   
   def move_piece(piece, target_sqr, mock=false)
-    start_sqr = piece.square
-
+    start_sqr        = piece.square
     piece.square     = target_sqr
     start_sqr.piece  = nil
     target_sqr.piece = piece
@@ -176,6 +225,9 @@ class Board
         when 3 then
           sqr = self.get_square(col, row)
           sqr.piece = Queen.new(owner: owner, square: sqr)
+        when 4 then
+          sqr = self.get_square(col, row)
+          sqr.piece = King.new(owner: owner, square: sqr)
         end
       end
     end

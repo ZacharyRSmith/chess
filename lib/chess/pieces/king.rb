@@ -184,10 +184,98 @@ class King < Piece
     return FALSE
   end
 
+  def can_castle_king_side?
+    if @moved
+      return false
+    end
+    if self.is_checked?
+      return false
+    end
+
+    case @owner
+    when " " then
+      bishop_sqr = @board.get_square('f1')
+      knight_sqr = @board.get_square('g1')
+      rook_sqr   = @board.get_square('h1')
+    when "," then
+      bishop_sqr = @board.get_square('f8')
+      knight_sqr = @board.get_square('g8')
+      rook_sqr   = @board.get_square('h8')
+    end
+    
+    if !bishop_sqr.piece &&
+       self.move_leaves_self_unchecked?(bishop_sqr) &&
+       !knight_sqr.piece &&
+       self.move_leaves_self_unchecked?(knight_sqr) &&
+       rook_sqr.piece &&
+       !rook_sqr.piece.moved
+
+      return true
+    else
+      return false
+    end
+  end
+  
+  def can_castle_queen_side?
+    if @moved
+      return false
+    end
+    if self.is_checked?
+      return false
+    end
+
+    case @owner
+    when " " then
+      queen_sqr  = @board.get_square('d1')
+      bishop_sqr = @board.get_square('c1')
+      knight_sqr = @board.get_square('b1')
+      rook_sqr   = @board.get_square('a1')
+    when "," then
+      queen_sqr  = @board.get_square('d8')
+      bishop_sqr = @board.get_square('c8')
+      knight_sqr = @board.get_square('b8')
+      rook_sqr   = @board.get_square('a8')
+    end
+    
+    if !queen_sqr.piece &&
+       self.move_leaves_self_unchecked?(queen_sqr) &&
+       !bishop_sqr.piece &&
+       self.move_leaves_self_unchecked?(bishop_sqr) &&
+       !knight_sqr.piece &&
+       rook_sqr.piece &&
+       !rook_sqr.piece.moved
+
+      return true
+    else
+      return false
+    end
+  end
+
+  def get_castle_king_side_sqr
+    case @owner
+    when " " then return @board.get_square('g1')
+    when "," then return @board.get_square('g8')
+    end
+  end
+  
+  def get_castle_queen_side_sqr
+    case @owner
+    when " " then return @board.get_square('c1')
+    when "," then return @board.get_square('c8')
+    end
+  end
+  
   def get_moves
     rslt_sqrs = []
     x_orig = @square.coordinates[0]
     y_orig = @square.coordinates[1]
+    
+    if self.can_castle_king_side?
+      rslt_sqrs << self.get_castle_king_side_sqr()
+    end
+    if self.can_castle_queen_side?
+      rslt_sqrs << self.get_castle_queen_side_sqr()
+    end
 
     for add_x in [-1, 0, 1]
       for add_y in [-1, 0, 1]

@@ -3,6 +3,14 @@ require 'minitest/autorun'
 
 
 class TestBoard < MiniTest::Test
+  def test_get_castling_rook_hash
+    board = Board.new()
+    rook_hash = board.get_castling_rook_hash(board.get_square('g1'))
+    
+    assert_equal(board.get_square('h1').piece, rook_hash['rook'])
+    assert_equal(board.get_square('f1'),       rook_hash['sqr'])
+  end
+  
   def test_white_king
     board = Board.new()
     assert(board.white_king.is_a? King)
