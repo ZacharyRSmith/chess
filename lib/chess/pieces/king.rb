@@ -204,10 +204,10 @@ class King < Piece
 
         if crnt_sqr.piece
           if crnt_sqr.piece.owner != @owner
-            rslt_sqrs << crnt_sqr
+            rslt_sqrs << crnt_sqr if self.move_leaves_self_unchecked?(crnt_sqr)
           end
         else
-          rslt_sqrs << crnt_sqr
+          rslt_sqrs << crnt_sqr if self.move_leaves_self_unchecked?(crnt_sqr)
         end
       end
     end
