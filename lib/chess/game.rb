@@ -126,8 +126,12 @@ class Game
       if @board.can_uncheck?(@player)
         puts "Player #{@player}, you are checked."
       else
+        puts "Player #{@player}, you've been checkmated."
         self.end_game()
       end
+    elsif !@board.can_move?(@player)
+      puts "Stalemate."
+      self.end_game()
     end
   end
 

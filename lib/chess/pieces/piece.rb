@@ -13,7 +13,7 @@ class Piece
 
   attr_accessor :can_move, :icon, :in_los_of, :moved, :owner, :square
   attr_reader   :board, :los
-  
+
   def can_uncheck?
     self.set_los()
 

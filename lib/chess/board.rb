@@ -15,8 +15,24 @@ class Board
     self.set_los_of_each_piece()
   end
 
-  attr_reader :black_king, :white_king
+  attr_accessor :black_king, :white_king
   
+  def can_move?(player)
+    @squares_ary.each do |col|
+      col.each do |sqr|
+        if sqr.piece && sqr.piece.owner == player
+          sqr.piece.set_los()
+          
+          if sqr.piece.can_move
+            return true
+          end
+        end
+      end
+    end
+    
+    return false
+  end
+
   def can_uncheck?(player)
     @squares_ary.each do |col|
       col.each do |sqr|

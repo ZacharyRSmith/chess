@@ -297,4 +297,60 @@ class TestBoard < MiniTest::Test
     
     assert(board.move_promotes_pawn?(pawn, target_sqr))
   end
+
+  def test_end_game_conditions_with_fools_mate
+    board = Board.new()
+    
+    # White's 1st move
+    pawn = board.get_square('f2').piece
+    board.move_piece(pawn, board.get_square('f3'))
+    
+    # Black's 1st move
+    pawn = board.get_square('e7').piece
+    board.move_piece(pawn, board.get_square('e5'))
+    
+    # White's 2nd move
+    pawn = board.get_square('g2').piece
+    board.move_piece(pawn, board.get_square('g4'))
+    
+    # Black's 2nd move
+    queen = board.get_square('d8').piece
+    board.move_piece(queen, board.get_square('h4'))
+    
+    assert(board.is_checked?(" "))
+    refute(board.can_uncheck?(" "))
+  end
+  
+  def test_can_move_true_at_start
+    board = Board.new()
+    
+    assert(board.can_move?(" "))
+    assert(board.can_move?(","))
+  end
+  
+  def test_can_move_false_if_stuck
+    board = Board.new()
+    board.clear_off_pieces()
+    
+    sqr = board.get_square('a1')
+    sqr.piece = King.new(owner: " ", square: sqr)
+    board.white_king = sqr.piece
+    
+    sqr = board.get_square('b2')
+    sqr.piece = Pawn.new(owner: " ", square: sqr)
+    
+    # This bishop pins white's pawn
+    sqr = board.get_square('d4')
+    sqr.piece = Bishop.new(owner: ",", square: sqr)
+    
+    # This bishop prevents King from moving to a2
+    sqr = board.get_square('b3')
+    sqr.piece = Bishop.new(owner: ",", square: sqr)
+    
+    # This bishop prevents King from moving to b1
+    sqr = board.get_square('c2')
+    sqr.piece = Bishop.new(owner: ",", square: sqr)
+
+    refute(board.can_move?(" "))
+  end
 end

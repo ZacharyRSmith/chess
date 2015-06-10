@@ -8,6 +8,4 @@ class TestGame < MiniTest::Test
     
     assert(game.board)
   end
-    
-
 end
