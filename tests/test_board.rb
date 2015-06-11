@@ -353,4 +353,39 @@ class TestBoard < MiniTest::Test
 
     refute(board.can_move?(" "))
   end
+  
+  def test_get_en_passant_moves
+    board = Board.new()
+    sneaker = board.get_square('e2').piece
+
+    sqr = board.get_square('d4')
+    pawn = Pawn.new(owner: ",", square: sqr)
+    sqr.piece = pawn
+    
+    ep_moves = board.get_en_passant_moves(sneaker, board.get_square('e4'))
+    
+    assert(ep_moves[0][0] == pawn)
+    assert(ep_moves[0][1] == board.get_square('e3'))
+  end
+  
+  def test_get_en_passant_moves_with_two_moves
+    board = Board.new()
+    sneaker = board.get_square('e2').piece
+
+    sqr = board.get_square('d4')
+    pawn_d = Pawn.new(owner: ",", square: sqr)
+    sqr.piece = pawn_d
+
+    sqr = board.get_square('f4')
+    pawn_f = Pawn.new(owner: ",", square: sqr)
+    sqr.piece = pawn_f
+    
+    ep_moves = board.get_en_passant_moves(sneaker, board.get_square('e4'))
+    
+    assert(ep_moves[0][0] == pawn_d)
+    assert(ep_moves[0][1] == board.get_square('e3'))
+    
+    assert(ep_moves[1][0] == pawn_f)
+    assert(ep_moves[1][1] == board.get_square('e3'))
+  end
 end

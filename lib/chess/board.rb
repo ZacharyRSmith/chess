@@ -113,6 +113,43 @@ class Board
       return rslt
     end
   end
+
+  def get_en_passant_moves(piece, target_sqr)
+    rslt = []
+    
+    if !piece.is_a?(Pawn)
+      return rslt
+    end
+    if piece.moved
+      return rslt
+    end
+    if ![3, 4].include?(target_sqr.coordinates[1])
+      return rslt
+    end
+
+    [-1, 1].each do |add_x|
+      sqr = self.get_square_at_relative_coord(target_sqr, add_x)
+
+      begin
+        if sqr.piece.is_a?(Pawn) && (sqr.piece.owner != piece.owner)
+
+          ep_sqr = self.get_square_at_relative_coord(target_sqr,
+                                                     0,
+                                                     sqr.piece.direction)
+          # Mock move piece to see if en passant would leave self checked
+          self.move_piece(piece, target_sqr, true)
+          
+          if sqr.piece.move_leaves_self_unchecked?(ep_sqr)
+            rslt << [sqr.piece, ep_sqr]
+          end
+        end
+      rescue NoMethodError
+        #puts "TEST"
+      end
+    end
+      
+    rslt
+  end
   
   def get_square(arg1, y=nil)
     if arg1.is_a?(String)
@@ -144,7 +181,7 @@ class Board
     return nil
   end
 
-  def get_square_at_relative_coord(sqr, add_x, add_y)
+  def get_square_at_relative_coord(sqr, add_x=0, add_y=0)
     orig_x = sqr.coordinates[0]
     orig_y = sqr.coordinates[1]
   

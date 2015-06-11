@@ -38,6 +38,13 @@ class Game
     end
   end
 
+  def get_move
+    piece      = self.prompt_start_square().piece
+    target_sqr = self.prompt_target_square(piece)
+    
+    return [piece, target_sqr]
+  end
+
   def get_promotion_type(input)
     case input
     when 'Q' then
@@ -47,10 +54,7 @@ class Game
     end
   end
   
-  def move
-    piece      = self.prompt_start_square().piece
-    target_sqr = self.prompt_target_square(piece)
-
+  def move(piece, target_sqr)
     if @board.move_promotes_pawn?(piece, target_sqr)
       promotion = self.prompt_promotion()
       @board.promote_pawn(piece, target_sqr, promotion)
@@ -75,6 +79,10 @@ class Game
   def prompt_start_square
     puts "Player #{@player}, please enter in the square of the piece you want to move (eg, 'e4')..."
     input = gets.chomp
+    if input.size != 2
+      puts "Error: Your input was not two characters."
+      return self.prompt_start_square()
+    end
 
     start_sqr = @board.get_square_with_chess_notation(input)
     if !start_sqr
@@ -134,10 +142,52 @@ class Game
     target_sqr
   end
 
+  def prompt_y_n_answer
+    input = gets.chomp.upcase!
+    if !['Y', 'N'].include?(input)
+      return prompt_y_n_answer()
+    end
+    
+    case input
+    when "Y" then return true
+    when "N" then return false
+    end
+  end
+
   def turn
     @board.render()
 
-    self.move()
+    move_ary = self.get_move()
+    
+    ep_moves = @board.get_en_passant_moves(move_ary[0], move_ary[1])
+    if !ep_moves.empty?
+      @board.move_piece(move_ary[0], move_ary[1])
+      self.change_player()
+      self.check_status()
+      @board.render()
+
+      puts "Player '#{@player}', you can perform an en passant maneuver.\n" +
+           "Do you wish to? (Y/n)"
+      if self.prompt_y_n_answer()
+        if ep_moves.size == 2
+          sqr = ep_moves[0][0].square.get_notation()
+
+          puts "Do you wish to move the pawn at #{sqr}? (Y/n)"
+          if self.prompt_y_n_answer()
+            @board.move_piece(ep_moves[0][0], ep_moves[0][1])
+            move_ary[1].piece = nil
+          else
+            @board.move_piece(ep_moves[1][0], ep_moves[1][1])
+            move_ary[1].piece = nil
+          end
+        else
+          @board.move_piece(ep_moves[0][0], ep_moves[0][1])
+          move_ary[1].piece = nil
+        end
+      end
+    else
+      self.move(move_ary[0], move_ary[1])
+    end
 
     self.change_player()
     self.check_status()
